@@ -5,11 +5,9 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import net.miginfocom.swing.MigLayout;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JTabbedPane;
-import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.Toolkit;
 import javax.swing.ImageIcon;
 
