@@ -77,12 +77,12 @@ public class MainPage extends JFrame {
         setBounds(100, 100, 876, 622);
         setFont(new Font("Source Serif Pro", Font.BOLD, 12));
         
+// PANELS
+        
         mainPanel = new JPanel();
         mainPanel.setBackground(new Color(0, 165, 255));
         mainPanel.setBorder(UIManager.getBorder("Button.border"));
         setContentPane(mainPanel);
-        
-// PANELS
         
         JPanel loginPanel = new JPanel();
         loginPanel.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
@@ -210,6 +210,7 @@ public class MainPage extends JFrame {
         	public void actionPerformed(ActionEvent e) 
         	{
         		var studentProfileFrame = new StudentHome();
+        		dispose();
         		studentProfileFrame.setVisible(true);
         	}
         });
