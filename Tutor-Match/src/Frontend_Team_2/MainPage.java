@@ -57,7 +57,8 @@ public class MainPage extends JFrame {
 		// Initialize components
 		initComponents();
 
-		// Doesn't work yet, but the idea is to check the state of the window to set isMaximized to true or false. 
+		// Doesn't work yet, but the idea is to check the state of the window to set
+		// isMaximized to true or false.
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowStateChanged(WindowEvent e) {
@@ -86,51 +87,15 @@ public class MainPage extends JFrame {
 		setBounds(100, 100, 876, 622);
 		setFont(new Font("Source Serif Pro", Font.BOLD, 12));
 
+// PANELS
+
 		mainPanel = new JPanel();
 		mainPanel.setBackground(new Color(0, 165, 255));
 		mainPanel.setBorder(UIManager.getBorder("Button.border"));
 		setContentPane(mainPanel);
 
-<<<<<<< HEAD
-// PANELS
-
 		JPanel loginPanel = new JPanel();
 		loginPanel.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
-=======
-/*
- * Constructor
- */
-    public MainPage() 
-    {
-    	// Initialize components
-    	initComponents();
-    	
-    	// Event handler
-    	createEvents();
-    }
-    
-/* ********************************************************************
- * This method contains all of the code for creating
- * and initializing components
- */
-	private void initComponents() 
-	{
-    	setTitle("tutor.match");
-    	setIconImage(Toolkit.getDefaultToolkit().getImage(MainPage.class.getResource("/resources/tutorMatchIcon_v2.png")));
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 876, 622);
-        setFont(new Font("Source Serif Pro", Font.BOLD, 12));
-        
-// PANELS
-        
-        mainPanel = new JPanel();
-        mainPanel.setBackground(new Color(0, 165, 255));
-        mainPanel.setBorder(UIManager.getBorder("Button.border"));
-        setContentPane(mainPanel);
-        
-        JPanel loginPanel = new JPanel();
-        loginPanel.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
->>>>>>> fc5f4a54f4020cfc09501a849fae1cb8b42fdb03
 
 // LABELS
 
@@ -171,106 +136,7 @@ public class MainPage extends JFrame {
 		signUpButton.setHorizontalTextPosition(SwingConstants.LEFT);
 		signUpButton.setHorizontalAlignment(SwingConstants.LEFT);
 
-// LAYOUT     
-<<<<<<< HEAD
-=======
-        
-        GroupLayout loginPanelLayout = new GroupLayout(loginPanel);
-        loginPanelLayout.setHorizontalGroup(
-        	loginPanelLayout.createParallelGroup(Alignment.LEADING)
-        		.addGroup(loginPanelLayout.createSequentialGroup()
-        			.addGroup(loginPanelLayout.createParallelGroup(Alignment.LEADING)
-        				.addGroup(loginPanelLayout.createSequentialGroup()
-        					.addGap(6)
-        					.addComponent(titleLabel, GroupLayout.DEFAULT_SIZE, 305, Short.MAX_VALUE))
-        				.addGroup(loginPanelLayout.createSequentialGroup()
-        					.addGap(35)
-        					.addGroup(loginPanelLayout.createParallelGroup(Alignment.LEADING)
-        						.addComponent(emailLabel)
-        						.addGroup(loginPanelLayout.createSequentialGroup()
-        							.addPreferredGap(ComponentPlacement.RELATED)
-        							.addGroup(loginPanelLayout.createParallelGroup(Alignment.LEADING)
-        								.addComponent(passwordLabel)
-        								.addGroup(loginPanelLayout.createParallelGroup(Alignment.TRAILING, false)
-        									.addComponent(emailTextField, Alignment.LEADING)
-        									.addGroup(Alignment.LEADING, loginPanelLayout.createSequentialGroup()
-        										.addComponent(signUpLabel)
-        										.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        										.addComponent(signUpButton)
-        										.addGap(12))
-        									.addComponent(loginButton, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
-        									.addComponent(passwordField, Alignment.LEADING)))))
-        					.addPreferredGap(ComponentPlacement.RELATED)))
-        			.addGap(0))
-        );
-        loginPanelLayout.setVerticalGroup(
-        	loginPanelLayout.createParallelGroup(Alignment.LEADING)
-        		.addGroup(loginPanelLayout.createSequentialGroup()
-        			.addGap(14)
-        			.addComponent(titleLabel, GroupLayout.PREFERRED_SIZE, 52, GroupLayout.PREFERRED_SIZE)
-        			.addGap(32)
-        			.addComponent(emailLabel)
-        			.addPreferredGap(ComponentPlacement.RELATED)
-        			.addComponent(emailTextField, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
-        			.addGap(18)
-        			.addComponent(passwordLabel)
-        			.addPreferredGap(ComponentPlacement.RELATED)
-        			.addComponent(passwordField, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
-        			.addGap(32)
-        			.addComponent(loginButton, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
-        			.addGap(36)
-        			.addGroup(loginPanelLayout.createParallelGroup(Alignment.BASELINE)
-        				.addComponent(signUpLabel)
-        				.addComponent(signUpButton))
-        			.addContainerGap(93, Short.MAX_VALUE))
-        );
-        loginPanel.setLayout(loginPanelLayout);
-        GroupLayout gl_mainPanel = new GroupLayout(mainPanel);
-        gl_mainPanel.setHorizontalGroup(
-        	gl_mainPanel.createParallelGroup(Alignment.TRAILING)
-        		.addGroup(Alignment.LEADING, gl_mainPanel.createSequentialGroup()
-        			.addGap(289)
-        			.addComponent(loginPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-        			.addContainerGap(244, Short.MAX_VALUE))
-        );
-        gl_mainPanel.setVerticalGroup(
-        	gl_mainPanel.createParallelGroup(Alignment.LEADING)
-        		.addGroup(gl_mainPanel.createSequentialGroup()
-        			.addGap(60)
-        			.addComponent(loginPanel, GroupLayout.PREFERRED_SIZE, 407, GroupLayout.PREFERRED_SIZE)
-        			.addContainerGap(100, Short.MAX_VALUE))
-        );
-        mainPanel.setLayout(gl_mainPanel);
-	}
-    
-/* *************************************************************************
- * This method contains all of the code for creating events
- */
-	private void createEvents() 
-	{
-		
-// BUTTONS
-		
-		loginButton.addActionListener(new ActionListener() 
-        {
-        	public void actionPerformed(ActionEvent e) 
-        	{
-        		var studentProfileFrame = new StudentHome();
-        		dispose();
-        		studentProfileFrame.setVisible(true);
-        	}
-        });
-		
-		signUpButton.addActionListener(new ActionListener() 
-        {
-            public void actionPerformed(ActionEvent e) 
-            {
-                Point location = getLocationOnScreen();
-                System.out.println(getExtendedState());
-                SignUpPage signUpPage = new SignUpPage(location, isMaximized);
-                signUpPage.setVisible(true);
->>>>>>> fc5f4a54f4020cfc09501a849fae1cb8b42fdb03
-
+// LAYOUT             
 		GroupLayout loginPanelLayout = new GroupLayout(loginPanel);
 		loginPanelLayout.setHorizontalGroup(loginPanelLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(loginPanelLayout.createSequentialGroup().addGroup(loginPanelLayout
@@ -333,6 +199,7 @@ public class MainPage extends JFrame {
 		loginButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				var studentProfileFrame = new StudentHome();
+				dispose();
 				studentProfileFrame.setVisible(true);
 			}
 		});
@@ -340,12 +207,11 @@ public class MainPage extends JFrame {
 		signUpButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Point location = getLocationOnScreen();
+				System.out.println(getExtendedState());
 				SignUpPage signUpPage = new SignUpPage(location, isMaximized);
 				signUpPage.setVisible(true);
-
-				// Close the LoginPage
-				dispose();
 			}
 		});
 	}
+
 }
