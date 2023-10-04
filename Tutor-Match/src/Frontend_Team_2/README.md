@@ -19,4 +19,4 @@
 **TutorHome** - If user is Tutor they will go to the TutorHome page after building their CourseList and setting their availability.
 
 ## Current Design Flow
-![Alt text](Tutor-Match_Flow_2.png)
+![Tutor-Match/src/resources/Tutor-Match_Flow_2.png](../resources/Tutor-Match_Flow_2.png)
