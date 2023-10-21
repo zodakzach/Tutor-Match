@@ -1,0 +1,4 @@
+CSCI 4230 - Software Engineering II
+CSCI 4231 - Software Engineering II Lab
+CSCI 4520 - Computer Architecture
+CSCI 4602 - Automata, Computability and Complexity 
