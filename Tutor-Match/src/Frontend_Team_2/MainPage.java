@@ -16,9 +16,6 @@ import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.JRadioButton;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.TitledBorder;
 import javax.swing.border.MatteBorder;
 
 @SuppressWarnings("serial")

@@ -5,24 +5,16 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import net.miginfocom.swing.MigLayout;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
-import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.Toolkit;
 import javax.swing.ImageIcon;
 import java.awt.Color;
 import javax.swing.JLabel;
-import java.awt.FlowLayout;
-import javax.swing.UIManager;
-import javax.swing.border.EtchedBorder;
 import javax.swing.border.CompoundBorder;
 import java.awt.Font;
 import javax.swing.SwingConstants;
-import javax.swing.JTextPane;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -31,7 +23,6 @@ import java.awt.event.ActionEvent;
 import javax.swing.JLayeredPane;
 import java.awt.CardLayout;
 import java.awt.Choice;
-import java.awt.List;
 
 @SuppressWarnings("serial")
 public class StudentHome extends JFrame 
