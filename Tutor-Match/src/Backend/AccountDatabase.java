@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
+import java.util.UUID;
 
 
 @SuppressWarnings("unused")
@@ -51,7 +52,7 @@ public class AccountDatabase
 			}
 			
 			temp = new Account(line[0], line[1], line[2], 
-					Boolean.parseBoolean(line[3]), Integer.parseInt(line[4]), Integer.parseInt(line[5]));
+					Boolean.parseBoolean(line[3]), UUID.fromString(line[4]), Integer.parseInt(line[5]));
 			
 			database.add(temp);
 			
@@ -69,7 +70,7 @@ public class AccountDatabase
 */	
 	public void display()
 	{
-		System.out.printf("%n%n");
+		System.out.println();
 		
 		for(int x = 0; x < database.size(); x++)
 		{
@@ -104,7 +105,7 @@ public class AccountDatabase
 * - if match found, returns Account object
 * - returns null if no match found
 */
-	public Account searchId(int id)
+	public Account searchId(UUID id)
 	{
 		for(Account student:database)
 		{
@@ -179,8 +180,10 @@ public class AccountDatabase
 			{
 				database.remove(x);
 				
-				this.save();
+				Account.updateCount(-1);
 				
+				this.save();
+		
 				return true;
 			}
 		}

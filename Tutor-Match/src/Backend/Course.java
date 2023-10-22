@@ -1,38 +1,76 @@
 package Backend;
 
+@SuppressWarnings("unused")
 public class Course implements Comparable<Course>
 {
 	private String field;
-	private String courseNum;
+	private Integer courseNum; // wrapper class used so courseNum can be used with .compareTo() function
 	private String title;
 	
-	public Course(String courseNum, String title)
+/**
+ * Constructor where CSCI is already set to field
+ * @param courseNum
+ * @param title
+ */
+	public Course(int courseNum, String title)
 	{
-		this.field = "CSCI";
+		this.field = "CSCI"; 
+		this.courseNum = courseNum;
+		this.title = title;
+	}
+	
+/**
+ * Constructor where the field can be passed
+ * @param field
+ * @param courseNum
+ * @param title
+ */
+	public Course(String field, int courseNum, String title)
+	{
+		this.field = field; 
 		this.courseNum = courseNum;
 		this.title = title;
 	}
 
+/**
+ * Returns this.field
+ * @return
+ */
 	public String getField()
 	{
 		return this.field;
 	}
 	
-	public String getCourseNum()
+/**
+ * Returns this.courseNum
+ * @return
+ */
+	public int getCourseNum()
 	{
 		return this.courseNum;
 	}
 	
+/**
+ * Returns this.title
+ * @return
+ */
 	public String getTitle()
 	{
 		return this.title;
 	}
 	
+/**
+ * Function used for sorting in the collections.sort framework
+ */
 	public int compareTo(Course course) 
 	{
-		return title.compareTo(course.title);
+		return this.courseNum.compareTo(course.courseNum);
 	}
 	
+/**
+ * Checks this.object to argument object for equality
+ * - part of collections framework
+ */
 	public boolean equals(Object obj)
     {
     	if(obj != null && obj instanceof Course)
@@ -43,9 +81,12 @@ public class Course implements Comparable<Course>
     	return false;
     }
     
+/**
+ * Returns this.Course as a string
+ */
     public String toString()
     {
-    	return String.format("%s%n%s%n%s%n", this.field, this.courseNum, this.title);
+    	return String.format("%s%n%d%n%s", this.field, this.courseNum, this.title);
     }
 }
 

@@ -10,9 +10,14 @@ import java.util.Scanner;
 public class CourseDatabase 
 {
 	private static ArrayList<Course> database;
-	// private static final int ACCOUNT_SIZE = 6;
 	private String file;
 	
+/**
+ * Constructor with file name
+ * - sets 'file' field
+ * - loads course database
+ * @param file
+ */
 	public CourseDatabase(String file)
 	{
 		database = new ArrayList<Course>();
@@ -23,8 +28,8 @@ public class CourseDatabase
 	}
 	
 // *************************************************************
-// This function will have to be modified depending on how the information is formatted 
-// from parsing the html
+// The load() function may need to be modified depending on how the information is parsed
+// from HTML
 // **********************************************************
 	public void load()
 	{
@@ -49,7 +54,7 @@ public class CourseDatabase
 				line[x] = reader.nextLine();
 			}
 			
-			temp = new Course(line[0], line[1]);
+			temp = new Course(line[0], Integer.parseInt(line[1]), line[2]);
 			
 			database.add(temp);
 			
@@ -62,9 +67,12 @@ public class CourseDatabase
 		reader.close();
 	}
 	
+/**
+ * Prints entire course list to console
+ */
 	public void display()
 	{
-		System.out.printf("%n%n");
+		System.out.println();
 		
 		for(int x = 0; x < database.size(); x++)
 		{
@@ -77,6 +85,11 @@ public class CourseDatabase
 		}
 	}
 	
+/**
+ * Searches courses by course name
+ * @param title - course name
+ * @return found course, or null if no course found
+ */
 	public Course searchCourseTitle(String title)
 	{
 		for(Course c:database)
@@ -89,19 +102,33 @@ public class CourseDatabase
 		return null;
 	}
 	
-	public Course searchCourseNum(String num)
+/**
+ * Searches courses by course number
+ * @param num - course number
+ * @return found course, or null if no course found
+ */
+	public Course searchCourseNum(int num)
 	{
 		for(Course c:database)
 		{
-			if((c.getCourseNum().equals(num)))
+			if((c.getCourseNum() == num))
 			{
 				return c;
 			}
 		}
 		return null;
 	}
-	
-	public boolean addCourse(String courseNum, String title)
+
+// ******************************************
+// May need modifying depending on HTML parsing
+// ********************************************
+/**
+ * Adds course to courselist
+ * @param courseNum
+ * @param title
+ * @return true if courses added successfully; false is course already exists in list
+ */
+	public boolean addCourse(int courseNum, String title)
 	{
 		if(this.searchCourseNum(courseNum) == null)
 		{
@@ -114,13 +141,18 @@ public class CourseDatabase
 		return false;
 	}
 	
-	public ArrayList<Course> getCoursesByNum(String num)
+/**
+ * Old shell for returning a sublist from another list
+ * - we may need it for the GUI when students are interacting with profile
+ * - if we don't use it, we can just delete it later
+ */
+	public ArrayList<Course> getCoursesByNum(int num)
 	{
 		var coursesByNum = new ArrayList<Course>();
 		
 		for (int x = 0; x < database.size(); x++)
 		{
-			if(database.get(x).getCourseNum().equals(num))
+			if(database.get(x).getCourseNum() == num)
 			{
 				coursesByNum.add(database.get(x));
 			}
@@ -128,6 +160,9 @@ public class CourseDatabase
 		return coursesByNum;
 	}
 	
+/**
+ * Saves course list to text file
+ */
 	public void save()
 	{
 		PrintWriter writer = null;

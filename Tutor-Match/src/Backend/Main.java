@@ -23,8 +23,18 @@ public class Main
 	
 	public static void main(String[] args) 
 	{
-		// INIT student and course databases
+		// __INIT__ student database
 		student_database = new AccountDatabase(STUDENT_PATH); 
+		
+		// __INIT__ course database
 		course_database = new CourseDatabase(COURSE_PATH);
+		
+		
+		// -- TEST CODE --
+		// comment out and in as needed to test cases
+		// "ctrl" + "shift" will comment out blocks of code
+		
+		// student_database.addStudent("email@email.com", "1234", "Ashitaka");
+		// course_database.display();
 	}
 }

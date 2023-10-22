@@ -4,11 +4,11 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-
 /*
  * ECU Website of all Computer Science courses
  * https://catalog.ecu.edu/preview_program.php?catoid=28&poid=7403&hl=computer+science&returnto=search
  */
+@SuppressWarnings("unused")
 public class GetCourseList 
 {
 	public GetCourseList()
