@@ -36,5 +36,21 @@ LOGAN 10/22/23
 ** Main (FUNCTIONAL)
 - student and course databases initialized
 - file paths/name are set as class fields
-- - easier to modify as needed per everyone's differentt computer devices
+- - easier to modify as needed per everyone's different computer devices
 - - - .getAbsolutePath() is used, so hopefully this won't be necessary
+
+=================================================================================
+
+LOGAN 10/25/23
+
+** GetCourseList (FUNCTIONAL)
+- parses courses from ECU website
+- - stores courses in a CourseDatabase object
+- core functions written
+
+** CourseDatabase (FUNCTIONAL)
+- second constructor added to handle GetCourseList
+- - loading from a file isn't necessary since the data is pulled from a website
+- ArrayLists of Courses can be parsed/searched by field, courseNum, and title
+- - previously could only search by courseNum
+- Comments updated after HTML parsing unknowns have been resolved

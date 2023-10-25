@@ -9,7 +9,7 @@ import java.util.Scanner;
 @SuppressWarnings("unused")
 public class CourseDatabase 
 {
-	private static ArrayList<Course> database;
+	private ArrayList<Course> database;
 	private String file;
 	
 /**
@@ -26,11 +26,19 @@ public class CourseDatabase
 		
 		this.load();
 	}
-	
-// *************************************************************
-// The load() function may need to be modified depending on how the information is parsed
-// from HTML
-// **********************************************************
+
+/**
+ * Constructor for course list from HTML
+ * - course is website, so no txt file necessary to store the courses
+ */
+	public CourseDatabase()
+	{
+		database = new ArrayList<Course>();
+	}
+
+/**
+ * Loads database from .txt file
+ */
 	public void load()
 	{
 		var line = new String[3];
@@ -101,38 +109,18 @@ public class CourseDatabase
 		}
 		return null;
 	}
-	
-/**
- * Searches courses by course number
- * @param num - course number
- * @return found course, or null if no course found
- */
-	public Course searchCourseNum(int num)
-	{
-		for(Course c:database)
-		{
-			if((c.getCourseNum() == num))
-			{
-				return c;
-			}
-		}
-		return null;
-	}
 
-// ******************************************
-// May need modifying depending on HTML parsing
-// ********************************************
 /**
  * Adds course to courselist
  * @param courseNum
  * @param title
  * @return true if courses added successfully; false is course already exists in list
  */
-	public boolean addCourse(int courseNum, String title)
+	public boolean addCourse(String field, int courseNum, String title)
 	{
-		if(this.searchCourseNum(courseNum) == null)
+		if(this.searchCourseTitle(title) == null)
 		{
-			database.add(new Course(courseNum, title));
+			database.add(new Course(field, courseNum, title));
 			
 			this.save();
 			
@@ -142,10 +130,10 @@ public class CourseDatabase
 	}
 	
 /**
- * Old shell for returning a sublist from another list
- * - we may need it for the GUI when students are interacting with profile
- * - if we don't use it, we can just delete it later
- */
+* Searches course lists by course num
+* @param num
+* @returns a list of all courses matching num
+*/
 	public ArrayList<Course> getCoursesByNum(int num)
 	{
 		var coursesByNum = new ArrayList<Course>();
@@ -158,6 +146,44 @@ public class CourseDatabase
 			}
 		}
 		return coursesByNum;
+	}
+	
+/**
+* Searches course lists by course title
+* @param title
+* @returns a list of all courses matching title
+*/
+	public ArrayList<Course> getCoursesByTitle(String title)
+	{
+		var coursesByTitle = new ArrayList<Course>();
+		
+		for (int x = 0; x < database.size(); x++)
+		{
+			if(database.get(x).getTitle().equals(title))
+			{
+				coursesByTitle.add(database.get(x));
+			}
+		}
+		return coursesByTitle;
+	}
+	
+/**
+* Searches course lists by course field
+* @param field
+* @returns a list of all courses matching field
+*/
+	public ArrayList<Course> getCoursesByField(String field)
+	{
+		var coursesByField = new ArrayList<Course>();
+		
+		for (int x = 0; x < database.size(); x++)
+		{
+			if(database.get(x).getField().equals(field))
+			{
+				coursesByField.add(database.get(x));
+			}
+		}
+		return coursesByField;
 	}
 	
 /**
