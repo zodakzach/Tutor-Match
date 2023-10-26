@@ -1,48 +1,65 @@
-package Frontend_Team_2;
+package Tutor_Source_Code;
 
-import java.awt.*;
-import java.awt.EventQueue;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JButton;
-import javax.swing.UIManager;
-import javax.swing.SwingConstants;
-import javax.swing.JLabel;
-import java.awt.Font;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
+// import org.mindrot.jbcrypt.BCrypt;
 import java.awt.Color;
-import javax.swing.JTextField;
-import javax.swing.JPasswordField;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.ActionEvent;
+
+import javax.swing.GroupLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.MatteBorder;
 
 @SuppressWarnings("serial")
-public class MainPage extends JFrame {
-
+public class LoginUI extends JFrame 
+{
+	private static AccountDatabase student_database_master;
+	private static GetCourseList course_database_master;
+	
+	private String login_email;
+	private String login_password;
+	
 	private JPanel mainPanel;
 	private JTextField emailTextField;
 	private JPasswordField passwordField;
 	private static boolean isMaximized;
 	private JButton signUpButton;
 	private JButton loginButton;
+	private static LoginUI mainFrame;
+	
+//	protected static AccountDatabase student_database;
+//	protected static GetCourseList course_database;
 
-	/*
-	 * Main Function
-	 */
-	public static void main(String[] args) 
+/*
+ * Main Function
+ */
+	public static void __PROGRAM_INIT__(AccountDatabase student_db, GetCourseList course_db) 
 	{
+		student_database_master = student_db;
+		course_database_master = course_db;
+		
 		EventQueue.invokeLater(new Runnable() 
 		{
 			public void run() 
 			{
 				try 
 				{
-					MainPage mainFrame = new MainPage();
+					mainFrame = new LoginUI();
 					mainFrame.setVisible(true);
 				} catch (Exception e) 
 				{
@@ -55,20 +72,25 @@ public class MainPage extends JFrame {
 	/*
 	 * Constructor
 	 */
-	public MainPage() 
+	public LoginUI() 
 	{
 		// Initialize components
 		initComponents();
 
 		// Doesn't work yet, but the idea is to check the state of the window to set
 		// isMaximized to true or false.
-		addWindowListener(new WindowAdapter() {
+		addWindowListener(new WindowAdapter() 
+		{
 			@Override
-			public void windowStateChanged(WindowEvent e) {
+			public void windowStateChanged(WindowEvent e) 
+			{
 				// Check if the window is maximized
-				if ((e.getNewState() & JFrame.MAXIMIZED_BOTH) == JFrame.MAXIMIZED_BOTH) {
+				if ((e.getNewState() & JFrame.MAXIMIZED_BOTH) == JFrame.MAXIMIZED_BOTH) 
+				{
 					isMaximized = true;
-				} else {
+				} 
+				else 
+				{
 					isMaximized = false;
 				}
 			}
@@ -82,10 +104,11 @@ public class MainPage extends JFrame {
  * ******************************************************************** 
  * This method contains all of the code for creating and initializing components
  */
-	private void initComponents() {
+	private void initComponents() 
+	{
 		setTitle("tutor.match");
 		setIconImage(
-				Toolkit.getDefaultToolkit().getImage(MainPage.class.getResource("/resources/tutorMatchIcon_v2.png")));
+				Toolkit.getDefaultToolkit().getImage(LoginUI.class.getResource("/resources/tutorMatchIcon_v2.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 876, 622);
 		setFont(new Font("Source Serif Pro", Font.BOLD, 12));
@@ -118,14 +141,19 @@ public class MainPage extends JFrame {
 		passwordLabel.setFont(new Font("Arial", Font.BOLD, 12));
 		passwordLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
-// TEXT FIELDS
+// TEXT FIELDS **********************************************************************
 
 		emailTextField = new JTextField();
+		login_email = emailTextField.getText();
+		
 		emailTextField.setFont(new Font("Arial", Font.PLAIN, 12));
 		emailTextField.setColumns(10);
 
 		passwordField = new JPasswordField();
+		login_password = new String(passwordField.getPassword());
+		
 		passwordField.setFont(new Font("Arial", Font.PLAIN, 12));
+		
 
 // BUTTONS
 
@@ -199,19 +227,54 @@ public class MainPage extends JFrame {
 
 // BUTTONS
 
-		loginButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				var studentProfileFrame = new StudentHome();
-				dispose();
-				studentProfileFrame.setVisible(true);
+		loginButton.addActionListener(new ActionListener() 
+		{
+			@SuppressWarnings("unused")
+			public void actionPerformed(ActionEvent e) 
+			{
+				
+				EventQueue.invokeLater(new Runnable() 
+				{
+					public void run() 
+					{
+						try 
+						{
+							if(student_database_master.loginIsValid(login_email, login_password))
+							{
+				// **************************************************************************
+				// Here is where we could check tutor boolean so we display tutor profile
+								Account personalized_account = student_database_master.searchEmail(login_email);
+								
+								var profileHomeUI = new ProfileHomeUI(personalized_account);
+								profileHomeUI.setVisible(true);
+								
+								dispose();
+							}
+							else
+							{
+								JOptionPane.showMessageDialog(null, "Incorrect Login Information!");
+							}
+							
+						} 
+						catch (Exception e) 
+						{
+							e.printStackTrace();
+						}
+					}
+				});
+				
 			}
 		});
 
-		signUpButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		signUpButton.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
 				Point location = getLocationOnScreen();
 				System.out.println(getExtendedState());
-				SignUpPage signUpPage = new SignUpPage(location, isMaximized);
+				
+				SignUpUI signUpPage = new SignUpUI(location, isMaximized);
+				dispose();
 				signUpPage.setVisible(true);
 			}
 		});

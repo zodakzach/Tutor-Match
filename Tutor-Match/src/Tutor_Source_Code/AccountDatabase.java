@@ -1,4 +1,4 @@
-package Backend;
+package Tutor_Source_Code;
 
 import java.io.File;
 import java.io.IOException;
@@ -65,6 +65,11 @@ public class AccountDatabase
 		reader.close();
 	}
 	
+	public Account get(int x)
+	{
+		return database.get(x);
+	}
+	
 /**
 * Displays database
 */	
@@ -90,6 +95,7 @@ public class AccountDatabase
  */
 	public Account searchEmail(String email)
 	{
+		System.out.println(email);
 		for(Account student:database)
 		{
 			if((student.getEmail().equals(email)))
@@ -99,6 +105,24 @@ public class AccountDatabase
 		}
 		return null;
 	}
+	
+/**
+ * Validates user login
+ * @param email
+ * @param password
+ * @return true if login info is correct; false if login isn't correct/doesn't exist
+ */
+	public boolean loginIsValid(String email, String password)
+	{
+		Account account_validating = this.searchEmail(email);
+		
+		if(account_validating != null)
+		{
+			return account_validating.getPassword().equals(password);
+		}
+		return false;
+	}
+	
 	
 /**
 * Searches database by id

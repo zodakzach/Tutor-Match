@@ -1,4 +1,4 @@
-package Backend;
+package Tutor_Source_Code;
 
 import java.io.File;
 import java.io.IOException;
@@ -121,8 +121,6 @@ public class CourseDatabase
 		if(this.searchCourseTitle(title) == null)
 		{
 			database.add(new Course(field, courseNum, title));
-			
-			this.save();
 			
 			return true;
 		}

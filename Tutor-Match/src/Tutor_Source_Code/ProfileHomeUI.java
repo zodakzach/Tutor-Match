@@ -1,34 +1,35 @@
-package Frontend_Team_2;
+package Tutor_Source_Code;
 
-import java.awt.EventQueue;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.JTabbedPane;
-import java.awt.Toolkit;
-import javax.swing.ImageIcon;
-import java.awt.Color;
-import javax.swing.JLabel;
-import javax.swing.border.CompoundBorder;
-import java.awt.Font;
-import javax.swing.SwingConstants;
-import javax.swing.JOptionPane;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.awt.event.ActionEvent;
-import javax.swing.JLayeredPane;
 import java.awt.CardLayout;
 import java.awt.Choice;
+import java.awt.Color;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import javax.swing.GroupLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.SwingConstants;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
 
 @SuppressWarnings("serial")
-public class StudentHome extends JFrame 
+public class ProfileHomeUI extends JFrame 
 {
 	private ArrayList<Choice> choices;
 	private String []selection;
 	private final String SKIP = "-";
+	private Account student;
 	
 	private JPanel contentPane;
 	private JButton confirmLogoutButton;
@@ -60,31 +61,11 @@ public class StudentHome extends JFrame
 	private JLabel course7Label;
 	private JLabel course8Label;
 	
-/**
- * Launch the application.
- */
-	public static void main(String[] args) 
-	{
-		EventQueue.invokeLater(new Runnable() 
-		{
-			public void run() 
-			{
-				try 
-				{
-					StudentHome studentProfileframe = new StudentHome();
-					studentProfileframe.setVisible(true);
-				} 
-				catch (Exception e) 
-				{
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
 // Create the frame.
-    public StudentHome() 
+    public ProfileHomeUI(Account student_account) 
     {
+    	this.student = student_account;
+    	
     	// Initialize components
     	initComponents();
     	
@@ -185,7 +166,7 @@ public class StudentHome extends JFrame
 
 	private void initComponents() 
 	{
-		setIconImage(Toolkit.getDefaultToolkit().getImage(StudentHome.class.getResource("/resources/tutorMatchIcon_v2.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(ProfileHomeUI.class.getResource("/resources/tutorMatchIcon_v2.png")));
 		setTitle("tutor.match Student");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 530, 354);
@@ -204,12 +185,12 @@ public class StudentHome extends JFrame
 		coursesTabPanel.setToolTipText("My Courses");
 		coursesTabPanel.setForeground(new Color(0, 0, 0));
 		coursesTabPanel.setBackground(new Color(0, 165, 255));
-		studentProfileTabbedPane.addTab("", new ImageIcon(StudentHome.class.getResource("/resources/coursesIcon.png")), coursesTabPanel, "My courses");
+		studentProfileTabbedPane.addTab("", new ImageIcon(ProfileHomeUI.class.getResource("/resources/coursesIcon.png")), coursesTabPanel, "My courses");
 		
 		scheduleTabPanel = new JPanel();
 		scheduleTabPanel.setBackground(new Color(0, 165, 255));
 		scheduleTabPanel.setToolTipText("View / Update Schedule");
-		studentProfileTabbedPane.addTab("", new ImageIcon(StudentHome.class.getResource("/resources/calendarIcon.png")), scheduleTabPanel, "View Schedule");
+		studentProfileTabbedPane.addTab("", new ImageIcon(ProfileHomeUI.class.getResource("/resources/calendarIcon.png")), scheduleTabPanel, "View Schedule");
 		scheduleTabPanel.setLayout(new CardLayout(0, 0));
 		
 		JLayeredPane layeredSchedulePane = new JLayeredPane();
@@ -223,7 +204,7 @@ public class StudentHome extends JFrame
 		JPanel sessionTabPanel = new JPanel();
 		sessionTabPanel.setBackground(new Color(0, 165, 255));
 		sessionTabPanel.setToolTipText("View Tutors");
-		studentProfileTabbedPane.addTab("", new ImageIcon(StudentHome.class.getResource("/resources/tutorIcon.png")), sessionTabPanel, "Schedule Tutor Session");
+		studentProfileTabbedPane.addTab("", new ImageIcon(ProfileHomeUI.class.getResource("/resources/tutorIcon.png")), sessionTabPanel, "Schedule Tutor Session");
 		sessionTabPanel.setLayout(new CardLayout(0, 0));
 		
 		layeredSessionPane = new JLayeredPane();
@@ -247,14 +228,14 @@ public class StudentHome extends JFrame
 		accountTabPanel.setForeground(new Color(0, 0, 0));
 		accountTabPanel.setBackground(new Color(0, 165, 255));
 		accountTabPanel.setToolTipText("Account");
-		studentProfileTabbedPane.addTab("", new ImageIcon(StudentHome.class.getResource("/resources/accountIcon.png")), accountTabPanel, "Account");
+		studentProfileTabbedPane.addTab("", new ImageIcon(ProfileHomeUI.class.getResource("/resources/accountIcon.png")), accountTabPanel, "Account");
 		studentProfileTabbedPane.setForegroundAt(3, new Color(0, 165, 255));
 		studentProfileTabbedPane.setBackgroundAt(3, new Color(0, 165, 255));
 		
 		JPanel logoutTabPanel = new JPanel();
 		logoutTabPanel.setBackground(new Color(0, 165, 255));
 		logoutTabPanel.setToolTipText("");
-		studentProfileTabbedPane.addTab("", new ImageIcon(StudentHome.class.getResource("/resources/logoutIcon.png")), logoutTabPanel, "Logout");
+		studentProfileTabbedPane.addTab("", new ImageIcon(ProfileHomeUI.class.getResource("/resources/logoutIcon.png")), logoutTabPanel, "Logout");
 		accountTabPanel.setLayout(new CardLayout(0, 0));
 		
 		accountLayeredPane = new JLayeredPane();
@@ -283,7 +264,7 @@ public class StudentHome extends JFrame
 		accountPane.add(profilePicLabel);
 		
 		JLabel profilePictureLabel = new JLabel("");
-		profilePictureLabel.setIcon(new ImageIcon(StudentHome.class.getResource("/resources/profilePicTempIcon.png")));
+		profilePictureLabel.setIcon(new ImageIcon(ProfileHomeUI.class.getResource("/resources/profilePicTempIcon.png")));
 		profilePictureLabel.setBounds(313, 62, 99, 55);
 		profilePictureLabel.setBackground(Color.WHITE);
 		accountPane.add(profilePictureLabel);
@@ -514,4 +495,5 @@ public class StudentHome extends JFrame
 			}
 		}
 	}
+
 }

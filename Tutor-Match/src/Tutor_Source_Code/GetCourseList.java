@@ -1,4 +1,5 @@
-package Backend;
+package Tutor_Source_Code;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -8,7 +9,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 @SuppressWarnings("unused")
-public class GetCourseList 
+public class GetCourseList extends CourseDatabase
 {
 	private CourseDatabase courseListMaster; // Master list of ECU courses for Computer Science BS
 	private static final String URL = 
@@ -21,7 +22,7 @@ public class GetCourseList
 	{
 		courseListMaster = new CourseDatabase();
 		
-		this.loadHTML();
+		// this.loadHTML();
 	}
 	
 /**
@@ -55,7 +56,7 @@ public class GetCourseList
 /**
  * Displays all contents of courseListMaster as a String
  */
-	private void display()
+	public void display()
 	{
 		courseListMaster.display();
 	}

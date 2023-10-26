@@ -1,4 +1,4 @@
-package Backend;
+package Tutor_Source_Code;
 
 import java.util.UUID;
 
@@ -80,7 +80,7 @@ public class Account implements Comparable<Account>
  */
     public String getEmail() 
     {
-        return email;
+        return this.email;
     }
     
 
@@ -91,7 +91,7 @@ public class Account implements Comparable<Account>
  */
     public String getPassword() 
     {
-        return password;
+        return this.password;
     }
     
 /**

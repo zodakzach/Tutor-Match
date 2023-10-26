@@ -1,6 +1,7 @@
-package Backend;
+package Tutor_Source_Code;
 
 import java.io.File;
+import Frontend_Team_2.*;
 
 @SuppressWarnings("unused")
 public class Main 
@@ -9,8 +10,8 @@ public class Main
 // The file names are declared as fields just in case you guys need to change them on your computer
 // This way the titles are easier to find and you don't need to sift through the code to change anything
 //********************************************************************************************
-	private static final String STUDENT_FILE = "src/Backend/studentDB.txt";
-	private static final String COURSE_FILE = "src/Backend/coursesDB.txt";
+	private static final String STUDENT_FILE = "src/Databases/studentDB.txt";
+	private static final String COURSE_FILE = "src/Databases/coursesDB.txt";
 	
 	// file paths
 	// ".getAbsolutetPath()" is used, so it should find the path on anyone's computer on its own
@@ -18,16 +19,18 @@ public class Main
 	private static final String COURSE_PATH = new File(COURSE_FILE).getAbsolutePath();
 
 	// databases
-	private static AccountDatabase student_database;
-	private static CourseDatabase course_database;
+	private static AccountDatabase student_database_master;
+	private static GetCourseList course_database_master;
 	
 	public static void main(String[] args) 
 	{
 		// __INIT__ student database
-		student_database = new AccountDatabase(STUDENT_PATH); 
+		student_database_master = new AccountDatabase(STUDENT_PATH); 
 		
-		// __INIT__ course database
-		course_database = new CourseDatabase(COURSE_PATH);
+		// __INIT__ MASTER course list database
+		course_database_master = new GetCourseList();
+		
+		LoginUI.__PROGRAM_INIT__(student_database_master, course_database_master);
 		
 		
 		// -- TEST CODE --

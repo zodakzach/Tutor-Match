@@ -4,6 +4,7 @@ LOGAN 10/22/23
  FUNCTIONAL = working class with little to no errors
  PROTOTYPE = may work, may not; still in-testing
  OUTLINED = primarily pseudo-code; most likely won't compile
+ OBSOLETE = deprecated; truncated
 ============================================================
 
 ** coursesDB.txt
@@ -54,3 +55,22 @@ LOGAN 10/25/23
 - ArrayLists of Courses can be parsed/searched by field, courseNum, and title
 - - previously could only search by courseNum
 - Comments updated after HTML parsing unknowns have been resolved
+
+==================================================================================
+
+LOGAN 10/25/2023 cont'd
+
+** Frontend_Team_2 (OBSOLETE)
+- too many scope issues were happening between all of the classes/packages
+- - for ease of coding, frontend and backend are now under one package
+
+** Tutor_Source_Code
+- Package housing ALL source code
+- all interface related class are appended with the convention "UI"
+
+** AccountDatabase (FUNCTIONAL)
+- loginIsValid function added to validate login information
+
+** LoginUI (PROTOTYPE)
+- I can't successfully parse the JTextField or JPassword field into a string
+- - Every login attempt fails even when it shouldn't
