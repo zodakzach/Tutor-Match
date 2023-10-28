@@ -74,3 +74,7 @@ LOGAN 10/25/2023 cont'd
 ** LoginUI (PROTOTYPE)
 - I can't successfully parse the JTextField or JPassword field into a string
 - - Every login attempt fails even when it shouldn't
+
+ZACHARY 10/28/2023
+- Fixed Login issue
+- - User can now login if email is in studentDB and if password matches the students password for that email.
