@@ -95,7 +95,6 @@ public class AccountDatabase
  */
 	public Account searchEmail(String email)
 	{
-		System.out.println(email);
 		for(Account student:database)
 		{
 			if((student.getEmail().equals(email)))
@@ -115,7 +114,7 @@ public class AccountDatabase
 	public boolean loginIsValid(String email, String password)
 	{
 		Account account_validating = this.searchEmail(email);
-		
+				
 		if(account_validating != null)
 		{
 			return account_validating.getPassword().equals(password);

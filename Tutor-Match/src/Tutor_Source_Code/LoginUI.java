@@ -144,13 +144,11 @@ public class LoginUI extends JFrame
 // TEXT FIELDS **********************************************************************
 
 		emailTextField = new JTextField();
-		login_email = emailTextField.getText();
 		
 		emailTextField.setFont(new Font("Arial", Font.PLAIN, 12));
 		emailTextField.setColumns(10);
 
 		passwordField = new JPasswordField();
-		login_password = new String(passwordField.getPassword());
 		
 		passwordField.setFont(new Font("Arial", Font.PLAIN, 12));
 		
@@ -239,6 +237,9 @@ public class LoginUI extends JFrame
 					{
 						try 
 						{
+							login_email = emailTextField.getText();
+							login_password = new String(passwordField.getPassword());
+										
 							if(student_database_master.loginIsValid(login_email, login_password))
 							{
 				// **************************************************************************

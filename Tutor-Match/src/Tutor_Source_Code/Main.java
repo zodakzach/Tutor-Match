@@ -2,6 +2,7 @@ package Tutor_Source_Code;
 
 import java.io.File;
 
+@SuppressWarnings("unused")
 public class Main 
 {
 //**********************************************************************************
