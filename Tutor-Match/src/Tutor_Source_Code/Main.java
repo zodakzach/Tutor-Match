@@ -31,7 +31,7 @@ public class Main
 		
 		LoginUI.__PROGRAM_INIT__(student_database_master, course_database_master);
 		
-		course_database_master.display();
+		// course_database_master.display();
 		
 		
 		// -- TEST CODE --
