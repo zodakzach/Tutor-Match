@@ -10,7 +10,7 @@ public class Main
 // This way the titles are easier to find and you don't need to sift through the code to change anything
 //********************************************************************************************
 	private static final String STUDENT_FILE = "src/Databases/studentDB.txt";
-	private static final String COURSE_FILE = "src/Databases/coursesDB.txt";
+	private static final String COURSE_FILE = "src/Databases/master_coursesDB.txt";
 	
 	// file paths
 	// ".getAbsolutetPath()" is used, so it should find the path on anyone's computer on its own
@@ -27,9 +27,11 @@ public class Main
 		student_database_master = new AccountDatabase(STUDENT_PATH); 
 		
 		// __INIT__ MASTER course list database
-		course_database_master = new GetCourseList();
+		course_database_master = new GetCourseList(COURSE_FILE);
 		
 		LoginUI.__PROGRAM_INIT__(student_database_master, course_database_master);
+		
+		course_database_master.display();
 		
 		
 		// -- TEST CODE --

@@ -1,0 +1,39 @@
+COMM 2020 Fundamentals of Speech Communication
+COMM 2410 Public Speaking
+PHIL 2275 Professional Ethics
+CSCI 1010 Algorithmic Problem Solving
+CSCI 1011 Algorithmic Problem Solving Lab
+CSCI 2400 Discrete Structures I
+CSCI 2405 Discrete Structures II
+CSCI 2410 Digital Logic Design
+CSCI 2530 Algorithms and Data Structures
+CSCI 2540 Data Abstraction and Object-Oriented Data Structures
+CSCI 3000 Operating Systems
+CSCI 3010 Computer Networks
+CSCI 3030 Software Engineering I
+CSCI 3584 Computational Linear Algebra
+CSCI 3650 Design and Analysis of Algorithms
+CSCI 3675 Principles of Programming Languages
+CSCI 3700 Database Management Systems
+CSCI 4230 Software Engineering II
+CSCI 4231 Software Engineering II Lab
+CSCI 4520 Computer Architecture
+CSCI 4602 Automata, Computability and Complexity
+CSCI 4900 Ethical and Professional Issues in Computer Science
+MATH 2121 Calculus for the Life Sciences I
+MATH 2171 Calculus I
+MATH 2228 Elementary Statistical Methods I
+MATH 2283 Statistics for Business
+BIOL 1100 Principles of Biology I
+BIOL 1101 Principles of Biology Laboratory I
+BIOL 1200 Principles of Biology II
+BIOL 1201 Principles of Biology Laboratory II
+CHEM 1150 General Chemistry I
+CHEM 1151 General Chemistry Laboratory I
+CHEM 1160 General Chemistry II
+CHEM 1161 General Chemistry Laboratory II
+PHYS 1251 General Physics Laboratory I
+PHYS 1261 General Physics Laboratory II
+PHYS 2350 University Physics I
+PHYS 2360 University Physics II
+SENG 3020 Software Verification and Validation

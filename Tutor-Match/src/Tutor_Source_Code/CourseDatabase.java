@@ -212,4 +212,19 @@ public class CourseDatabase
 		}
 		writer.close();
 	}
+	
+	public Course get(int x)
+	{
+		return database.get(x);
+	}
+	
+	public void add(Course x)
+	{
+		database.add(x);
+	}
+	
+	public int size()
+	{
+		return database.size();
+	}
 }

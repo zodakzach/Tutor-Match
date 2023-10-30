@@ -15,6 +15,7 @@ public class Account implements Comparable<Account>
 	private boolean tutor;
     private static int count = 0;
     private int studyTime;
+    private Schedule schedule;
 
 /**
  * Constructs a new Account for a NON-TUTOR STUDENT with the given email, password, and name.
@@ -54,6 +55,7 @@ public class Account implements Comparable<Account>
         this.name = name;
         this.studyTime = 0;
         this.tutor = tutor;
+        this.schedule = new Schedule();
         
     }
     

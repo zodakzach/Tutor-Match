@@ -86,7 +86,7 @@ public class Course implements Comparable<Course>
  */
     public String toString()
     {
-    	return String.format("%s%n%d%n%s", this.field, this.courseNum, this.title);
+    	return String.format("%s %d %s", this.field, this.courseNum, this.title);
     }
 }
 

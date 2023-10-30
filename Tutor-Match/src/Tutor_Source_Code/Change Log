@@ -75,6 +75,36 @@ LOGAN 10/25/2023 cont'd
 - I can't successfully parse the JTextField or JPassword field into a string
 - - Every login attempt fails even when it shouldn't
 
+==================================================================================
+
 ZACHARY 10/28/2023
+
+** LoginUI (PROTOTYPE)
 - Fixed Login issue
 - - User can now login if email is in studentDB and if password matches the students password for that email.
+
+==================================================================================
+
+LOGAN 10/30/2023
+
+** coursesDB.txt
+- renamed: master_coursesDB.txt
+
+** CourseDatabase (FUNCTIONAL)
+- .get(), .size(), and .add() functions added
+- - this allows GetCourseList to use these ArrayList<> functions
+
+** GetCourseList (FUNCTIONAL)
+- save() function added
+- - writes master HTML course list to .txt file
+- - see boolean field "loaded"
+- - - Manually set to true, as needed, so not over parsing from website
+- - - master_coursesDB.txt is already saved with courses from website
+- loadTXT() function added
+- loadHTML() revised to accommodate loadTXT() and save()
+
+** Schedule (PROTOTYPE)
+- Schedule class outlined
+- The Schedule object is a dictionary holding another dictionary
+- - Acts as a 'weekday', and then the time slots specific to a day
+- - - weekday(hour(available || not available)
