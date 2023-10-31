@@ -17,6 +17,26 @@ public class Schedule<day>
 	private static final int FRIDAY = 5;
 	private static final int SATURDAY = 6;
 	
+	public enum ACCESS 
+	{
+		FREE(1),
+		BUSY(0),
+		NOT(-1);
+		
+		private final int availability;
+
+		ACCESS(int value) 
+		{
+	        this.availability = value;
+	    }
+
+	    public int getNumericValue() 
+	    {
+	        return availability;
+	    }
+		
+	}
+	
 	Map<Integer, Boolean> hours; // dictionary holding a boolean value for each hour of a day
 	Map<Integer, Map<Integer, Boolean>> weekdays; // dictionary holding the dictionary of days
 	
