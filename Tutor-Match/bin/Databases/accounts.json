@@ -1,0 +1,34 @@
+[
+  {
+    "id": "f3c61aa9-0823-495f-b493-c531d3d7f2bb",
+    "email": "newTest@email.com",
+    "password": "pass",
+    "name": "zachary",
+    "tutor": false,
+    "studyTime": 0
+  },
+  {
+    "id": "a107647c-cd76-40ab-b23e-2313a8d53782",
+    "email": "bobbygirl@gmail.com",
+    "password": "pass",
+    "name": "zachary",
+    "tutor": true,
+    "studyTime": 0
+  },
+  {
+    "id": "72681fca-ecc5-45e4-b4b7-6d4cedb306cc",
+    "email": "newtest@email.com",
+    "password": "pass",
+    "name": "pass",
+    "tutor": true,
+    "studyTime": 0
+  },
+  {
+    "id": "1316fab9-f38d-461e-b999-a8813b1eb671",
+    "email": "test",
+    "password": "pass",
+    "name": "testingAccount",
+    "tutor": false,
+    "studyTime": 0
+  }
+]

@@ -12,6 +12,9 @@ public class Main
 	private static final String STUDENT_FILE = "src/Databases/accounts.json";
 	private static final String COURSE_FILE = "src/Databases/courseLists.json";
 	
+	// private static final String STUDENT_FILE = "src/Databases/studentDB.txt";
+	// private static final String COURSE_FILE = "src/Databases/master_coursesDB.txt";
+	
 	// file paths
 	// ".getAbsolutetPath()" is used, so it should find the path on anyone's computer on its own
 	private static final String STUDENT_PATH = new File(STUDENT_FILE).getAbsolutePath();
@@ -33,7 +36,11 @@ public class Main
 
 		course_database_master.addCourseList("ECU Course Catalog", catalog.getCourseCatalog());
 		
+		// course_database_master = new GetCourseList(COURSE_FILE);
+		
 		LoginUI.__PROGRAM_INIT__(student_database_master, course_database_master);
+		
+		// course_database_master.display();
 		
 		
 		// -- TEST CODE --

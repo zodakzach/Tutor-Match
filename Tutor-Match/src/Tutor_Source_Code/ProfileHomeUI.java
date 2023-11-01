@@ -289,7 +289,6 @@ public class ProfileHomeUI extends JFrame {
 		studentProfileTabbedPane.addTab("", new ImageIcon(ProfileHomeUI.class.getResource("/resources/accountIcon.png")),
 				accountTabPanel, "Account");
 		
-
 		accountLayeredPane = new JLayeredPane();
 		accountTabPanel.add(accountLayeredPane, "name_704714767136400");
 

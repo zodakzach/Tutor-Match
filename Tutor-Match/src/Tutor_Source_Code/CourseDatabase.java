@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 @SuppressWarnings("unused")
@@ -215,5 +216,25 @@ public class CourseDatabase
 			}
 		}
 		writer.close();
+	}
+	
+	public void sort()
+	{
+		Collections.sort(database);
+	}
+	
+	public Course get(int x)
+	{
+		return database.get(x);
+	}
+	
+	public void add(Course x)
+	{
+		database.add(x);
+	}
+	
+	public int size()
+	{
+		return database.size();
 	}
 }
