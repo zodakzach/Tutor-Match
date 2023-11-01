@@ -5,58 +5,47 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class Schedule<day> 
+public class Schedule 
 {
-// *******************************************************************
-//  Not sure if we'll need these yet, but I went ahead an put them in just in case 
-	private static final int SUNDAY = 0;
-	private static final int MONDAY = 1;
-	private static final int TUESDAY = 2;
-	private static final int WEDNESDAY = 3;
-	private static final int THURSDAY = 4;
-	private static final int FRIDAY = 5;
-	private static final int SATURDAY = 6;
-	
 	public enum ACCESS 
 	{
-		FREE(1),
-		BUSY(0),
-		NOT(-1);
+		FREE(1), // AVAILABLE
+		BUSY(0), // NORMALLY AVAILABLE, BUT EVENT SCHEDULED
+		NOT(-1); // UNAVAILABLE; BLACKED OUT DATE
 		
-		private final int availability;
+		private final int AVAILABILITY;
 
-		ACCESS(int value) 
+		ACCESS(int avail) 
 		{
-	        this.availability = value;
+	        this.AVAILABILITY = avail;
 	    }
 
-	    public int getNumericValue() 
+	    public int getNum() 
 	    {
-	        return availability;
+	        return AVAILABILITY;
 	    }
-		
 	}
 	
-	Map<Integer, Boolean> hours; // dictionary holding a boolean value for each hour of a day
-	Map<Integer, Map<Integer, Boolean>> weekdays; // dictionary holding the dictionary of days
+	Map<Integer, ACCESS> hours; // dictionary holding a boolean value for each hour of a day
+	Map<Integer, Map<Integer, ACCESS>> schedule; // dictionary holding the dictionary of days
 	
 /**
- * Sets availability to false for every instance of time
+ * Sets availability to NOT for every instance of time
  */
 	public Schedule()
 	{
-		weekdays = new HashMap<Integer, Map<Integer, Boolean>>();
+		schedule = new HashMap<Integer, Map<Integer, ACCESS>>();
 		
 		for (int day = 0; day < 7; day++) 
 		{
 			hours = new HashMap<>();
             
-            for (int time = 0; time < 24; time++) 
+            for (int hour = 0; hour < 24; hour++) 
             {
-            	hours.put(time, false);
+            	hours.put(hour, ACCESS.NOT);
             }
             
-            weekdays.put(day, hours);
+            schedule.put(day, hours);
         }
 	}
 	
@@ -65,23 +54,76 @@ public class Schedule<day>
  * @param day
  * @param time
  */
-	public void setSchedule(int weekday, int hour, boolean avail )
+	public void setSchedule(int day, int hour, ACCESS avail )
 	{
-		weekdays.get(weekday).put(hour, avail);
+		schedule.get(day).put(hour, avail);
 	}
 	
-	public Map<Integer, Map<Integer, Boolean>> getSchedule()
+/**
+ * Gets entire schedule
+ * @return
+ */
+	public Map<Integer, Map<Integer, ACCESS>> getSchedule()
 	{
-		return this.weekdays;
+		return this.schedule;
 	}
 	
-	public Map<Integer, Boolean> getDay(int weekday)
+/**
+ * Gets availability by day
+ * @param weekday
+ * @return
+ */
+	public Map<Integer, ACCESS> getDay(int day)
 	{
-		return weekdays.get(weekday);
+		return schedule.get(day);
 	}
 	
-	public boolean getAvailability(int weekday, int hour)
+/**
+ * Gets availability by hour
+ * @param weekday
+ * @param hour
+ * @return
+ */
+	public int getAvailInt(int day, int hour)
 	{
-		return weekdays.get(weekday).get(hour);
+		return schedule.get(day).get(hour).getNum();
+	}
+	
+/**
+ * returns ACCESS to check availability 
+ * @param day
+ * @param hour
+ * @return
+ */
+	public ACCESS getAccess(int day, int hour)
+	{
+		return schedule.get(day).get(hour);
+	}
+	
+/**
+ * Updates this.schedule with newSchedule
+ * @param newSchedule
+ */
+	public void changeSchedule(Schedule newSchedule)
+	{
+		schedule = newSchedule.getSchedule();
+	}
+	
+/**
+ * Makes sure there is availability during a time so there isn't overlap
+ * @param weekday
+ * @param hour
+ * @return
+ */
+	public boolean scheduleSession(int weekday, int hour)
+	{
+		if(this.getAvailInt(weekday, hour) < 1)
+		{
+			return false;
+		}
+		
+		schedule.get(weekday).put(hour, ACCESS.BUSY);
+		
+		return true;
 	}
 }
