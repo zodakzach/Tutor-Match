@@ -3,6 +3,7 @@ package Tutor_Source_Code;
 import java.awt.CardLayout;
 import java.awt.Choice;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -21,6 +22,10 @@ import javax.swing.SwingConstants;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
+import java.awt.GridLayout;
+import javax.swing.BoxLayout;
+import java.awt.FlowLayout;
+import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
 public class ProfileHomeUI extends JFrame {
@@ -169,7 +174,7 @@ public class ProfileHomeUI extends JFrame {
 				.getImage(ProfileHomeUI.class.getResource("/resources/tutorMatchIcon_v2.png")));
 		setTitle("tutor.match Student");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 530, 354);
+		setBounds(100, 100, 628, 409);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(0, 165, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -184,7 +189,7 @@ public class ProfileHomeUI extends JFrame {
 		coursesTabPanel = new JPanel();
 		coursesTabPanel.setToolTipText("My Courses");
 		coursesTabPanel.setForeground(new Color(0, 0, 0));
-		coursesTabPanel.setBackground(new Color(0, 165, 255));
+		coursesTabPanel.setBackground(new Color(0, 160, 254));
 		studentProfileTabbedPane.addTab("",
 				new ImageIcon(ProfileHomeUI.class.getResource("/resources/coursesIcon.png")), coursesTabPanel,
 				"My courses");
@@ -280,7 +285,6 @@ public class ProfileHomeUI extends JFrame {
 		logoutConfirmPanel.add(confirmationQuestionLabel);
 
 		JPanel accountTabPanel = new JPanel();
-		logoutTabPanel.add(accountTabPanel, "name_586825379973102");
 		accountTabPanel.setBorder(new CompoundBorder());
 		accountTabPanel.setForeground(new Color(0, 0, 0));
 		accountTabPanel.setBackground(new Color(0, 165, 255));
@@ -351,40 +355,26 @@ public class ProfileHomeUI extends JFrame {
 // LAYOUT	
 
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING).addGroup(gl_contentPane
-				.createSequentialGroup().addContainerGap(41, Short.MAX_VALUE)
-				.addComponent(studentProfileTabbedPane, GroupLayout.PREFERRED_SIZE, 427, GroupLayout.PREFERRED_SIZE)
-				.addGap(36)));
-		gl_contentPane
-				.setVerticalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_contentPane
-								.createSequentialGroup().addComponent(studentProfileTabbedPane,
-										GroupLayout.PREFERRED_SIZE, 283, GroupLayout.PREFERRED_SIZE)
-								.addContainerGap(22, Short.MAX_VALUE)));
+		gl_contentPane.setHorizontalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addGap(32)
+					.addComponent(studentProfileTabbedPane, GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE)
+					.addGap(36))
+		);
+		gl_contentPane.setVerticalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addComponent(studentProfileTabbedPane, GroupLayout.DEFAULT_SIZE, 338, Short.MAX_VALUE)
+					.addGap(33))
+		);
 		contentPane.setLayout(gl_contentPane);
-		coursesTabPanel.setLayout(new CardLayout(0, 0));
+		coursesTabPanel.setLayout(null);
 
 		layeredCoursesPane = new JLayeredPane();
-		coursesTabPanel.add(layeredCoursesPane, "name_702669511287000");
-
-		myCoursesPanel = new JPanel();
-		layeredCoursesPane.setLayer(myCoursesPanel, 2);
-		myCoursesPanel.setLayout(null);
-		myCoursesPanel.setBackground(new Color(0, 165, 255));
-		myCoursesPanel.setBounds(0, 0, 432, 205);
-		layeredCoursesPane.add(myCoursesPanel);
-
-		JLabel myCoursesLabel = new JLabel("My Courses");
-		myCoursesLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		myCoursesLabel.setFont(new Font("Source Code Pro", Font.BOLD, 36));
-		myCoursesLabel.setBounds(101, 11, 220, 46);
-		myCoursesPanel.add(myCoursesLabel);
-
-		editCoursesButton = new JButton("Edit Courses");
-		editCoursesButton.setFont(new Font("Arial", Font.PLAIN, 12));
-		editCoursesButton.setBackground(new Color(0, 165, 255));
-		editCoursesButton.setBounds(148, 171, 131, 23);
-		myCoursesPanel.add(editCoursesButton);
+		layeredCoursesPane.setForeground(new Color(0, 160, 254));
+		layeredCoursesPane.setBounds(0, 0, 529, 292);
+		coursesTabPanel.add(layeredCoursesPane);
 
 //**********************************************************************************************************
 		// ArrayList<Jlabel> labels = new ArrayList<Jlabel>;
@@ -402,64 +392,54 @@ public class ProfileHomeUI extends JFrame {
 
 		// Define an ArrayList to hold your JLabels
 		courseLabels = new ArrayList<JLabel>();
-
+		
+		myCoursesPanel = new JPanel();
+		layeredCoursesPane.setLayer(myCoursesPanel, 2);
+		myCoursesPanel.setBackground(new Color(247, 255, 245));
+		myCoursesPanel.setBounds(0, 0, 529, 294);
+		layeredCoursesPane.add(myCoursesPanel);
+		myCoursesPanel.setLayout(new GridLayout(0, 1, 0, 0));
+				
+		JLabel myCoursesLabel = new JLabel("My Courses");
+		myCoursesLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		myCoursesLabel.setFont(new Font("Source Code Pro", Font.BOLD, 36));
+		myCoursesPanel.add(myCoursesLabel);
+		
 		createCourseLabels();
+						
+		editCoursesButton = new JButton("Edit Courses");
+		editCoursesButton.setForeground(new Color(0, 0, 0));
+		myCoursesPanel.add(editCoursesButton);
+		editCoursesButton.setFont(new Font("Arial", Font.PLAIN, 12));
+		editCoursesButton.setBackground(new Color(0, 160, 254));
 
 		editCoursesPanel = new JPanel();
-		editCoursesPanel.setBackground(new Color(0, 165, 255));
+		editCoursesPanel.setBackground(new Color(248, 255, 238));
 		layeredCoursesPane.setLayer(editCoursesPanel, 0);
-		editCoursesPanel.setBounds(0, 0, 432, 205);
+		editCoursesPanel.setBounds(0, 0, 529, 294);
 		layeredCoursesPane.add(editCoursesPanel);
-		editCoursesPanel.setLayout(null);
-
-		JLabel lblNewLabel = new JLabel("Update Courses");
-		lblNewLabel.setFont(new Font("Arial", Font.BOLD, 30));
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setBackground(new Color(0, 165, 255));
-		lblNewLabel.setBounds(80, 0, 280, 50);
-		editCoursesPanel.add(lblNewLabel);
+		editCoursesPanel.setLayout(new GridLayout(0, 1, 0, 5));
+		
+				JLabel lblNewLabel = new JLabel("Update Courses");
+				lblNewLabel.setFont(new Font("Arial", Font.BOLD, 30));
+				lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+				lblNewLabel.setBackground(new Color(0, 165, 255));
+				editCoursesPanel.add(lblNewLabel);
+		
+		saveCourseChangesButton = new JButton("Update Courses");
+		saveCourseChangesButton.setBackground(new Color(0, 165, 255));
+		editCoursesPanel.add(saveCourseChangesButton);
 
 // CHOICES
 		choices = new ArrayList<Choice>();
 
-		choices.add(new Choice());
-		choices.get(0).setBounds(90, 64, 82, 20);
-		editCoursesPanel.add(choices.get(0));
-
-		choices.add(new Choice());
-		choices.get(1).setBounds(90, 90, 82, 20);
-		editCoursesPanel.add(choices.get(1));
-
-		choices.add(new Choice());
-		choices.get(2).setBounds(90, 116, 82, 20);
-		editCoursesPanel.add(choices.get(2));
-
-		choices.add(new Choice());
-		choices.get(3).setBounds(265, 64, 82, 20);
-		editCoursesPanel.add(choices.get(3));
-
-		choices.add(new Choice());
-		choices.get(4).setBounds(265, 116, 82, 20);
-		editCoursesPanel.add(choices.get(4));
-
-		choices.add(new Choice());
-		choices.get(5).setBounds(265, 90, 82, 20);
-		editCoursesPanel.add(choices.get(5));
-
-		choices.add(new Choice());
-		choices.get(6).setBounds(90, 143, 82, 20);
-		editCoursesPanel.add(choices.get(6));
-
-		choices.add(new Choice());
-		choices.get(7).setBounds(265, 142, 82, 20);
-		editCoursesPanel.add(choices.get(7));
+		for (int i = 0; i < 8; i++) {
+		    Choice choice = new Choice();
+		    editCoursesPanel.add(choice);
+		    choices.add(choice);
+		}
 
 		populateChoice(choices);
-
-		saveCourseChangesButton = new JButton("Update Courses");
-		saveCourseChangesButton.setBackground(new Color(0, 165, 255));
-		saveCourseChangesButton.setBounds(149, 171, 131, 23);
-		editCoursesPanel.add(saveCourseChangesButton);
 
 	}
 
@@ -472,34 +452,14 @@ public class ProfileHomeUI extends JFrame {
 	}
 
 	private void createCourseLabels() {
-		// Define the initial position for the labels
-		
-		int x = 20;
-		int y = 60;
-
-		// Define the dimensions for each label
-		int width = 200;
-		int height = 30;
-
-		int counter = 0; // Initialize the counter
-
 		for (String courseName : courseNames) {
-			JLabel courseLabel = new JLabel(courseName);
-			courseLabel.setBounds(x, y, width, height);
+			JLabel courseLabel = new JLabel("<html><div style='text-align: center;" + "px;'>" + courseName + "</div></html>");
+
+		    courseLabel.setHorizontalAlignment(SwingConstants.CENTER); // Center the text
 			myCoursesPanel.add(courseLabel);
 
 			// Add the created label to the ArrayList for future reference
 			courseLabels.add(courseLabel);
-
-			y += 25;
-
-			if (counter == 3) {
-				// Update the x-coordinate and reset the counter
-				x = 220; // Add spacing between labels
-				y = 60;
-			}
-
-			counter++; // Increment the counter
 		}
 	}
 }
