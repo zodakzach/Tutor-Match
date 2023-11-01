@@ -25,11 +25,10 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.MatteBorder;
 
-@SuppressWarnings("serial")
 public class LoginUI extends JFrame 
 {
-	private static AccountDatabase student_database_master;
-	private static GetCourseList course_database_master;
+	private static AccountDB student_database_master;
+	private static CourseListDB course_database_master;
 	
 	private String login_email;
 	private String login_password;
@@ -48,7 +47,7 @@ public class LoginUI extends JFrame
 /*
  * Main Function
  */
-	public static void __PROGRAM_INIT__(AccountDatabase student_db, GetCourseList course_db) 
+	public static void __PROGRAM_INIT__(AccountDB student_db, CourseListDB course_db) 
 	{
 		student_database_master = student_db;
 		course_database_master = course_db;
@@ -239,14 +238,14 @@ public class LoginUI extends JFrame
 						{
 							login_email = emailTextField.getText();
 							login_password = new String(passwordField.getPassword());
-										
-							if(student_database_master.loginIsValid(login_email, login_password))
+																	
+							if(student_database_master.isLoginValid(login_email, login_password))
 							{
 				// **************************************************************************
 				// Here is where we could check tutor boolean so we display tutor profile
-								Account personalized_account = student_database_master.searchEmail(login_email);
+								Account personalized_account = student_database_master.getAccountByEmail(login_email);
 								
-								var profileHomeUI = new ProfileHomeUI(personalized_account);
+								var profileHomeUI = new ProfileHomeUI(personalized_account, course_database_master);
 								profileHomeUI.setVisible(true);
 								
 								dispose();
@@ -274,7 +273,7 @@ public class LoginUI extends JFrame
 				Point location = getLocationOnScreen();
 				System.out.println(getExtendedState());
 				
-				SignUpUI signUpPage = new SignUpUI(location, isMaximized);
+				SignUpUI signUpPage = new SignUpUI(location, isMaximized, student_database_master, course_database_master);
 				dispose();
 				signUpPage.setVisible(true);
 			}

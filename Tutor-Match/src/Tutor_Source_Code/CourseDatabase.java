@@ -35,6 +35,10 @@ public class CourseDatabase
 	{
 		database = new ArrayList<Course>();
 	}
+	
+	public ArrayList<Course> getAllCourses(){
+		return database;
+	}
 
 /**
  * Loads database from .txt file

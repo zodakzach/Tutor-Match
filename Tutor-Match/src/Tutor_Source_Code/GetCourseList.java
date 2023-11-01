@@ -9,20 +9,23 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 @SuppressWarnings("unused")
-public class GetCourseList extends CourseDatabase
+public class GetCourseList
 {
 	private CourseDatabase courseListMaster; // Master list of ECU courses for Computer Science BS
 	private static final String URL = 
 			"https://catalog.ecu.edu/preview_program.php?catoid=28&poid=7403&hl=%22computer+science%22&returnto=search";
 	
+	private String file;
+
+	
 /*
  * Constructor
  */
-	public GetCourseList()
+	public GetCourseList(String file)
 	{
-		courseListMaster = new CourseDatabase();
+		courseListMaster = new CourseDatabase(file);
 		
-		// this.loadHTML();
+		this.loadHTML();
 	}
 	
 /**

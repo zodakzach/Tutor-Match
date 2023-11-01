@@ -77,4 +77,48 @@ LOGAN 10/25/2023 cont'd
 
 ZACHARY 10/28/2023
 - Fixed Login issue
-- - User can now login if email is in studentDB and if password matches the students password for that email.
+- - User can now login if email is in studentDB and if password matches the students password for that email
+
+ZACHARY 10/30/2023
+- Added Sign-Up page functionality
+- - User can now sign up as either student or tutor and the account is added to the account database
+- - - if account was added correctly and loginIsValid returns true the user will be redirected to homepage same way as the login page
+
+ZACHARY 10/31/2023
+** studentDB (OBSOLETE)
+- studentDB.txt is now replaced by accounts.json
+- - Json file is easier to parse and the old text file was not being consistent with logging in
+- - - couldn't figure out the issue, but no longer an issue with new DB.
+
+** GetCourseList (OBSOLETE)
+- GetCourseList.java was replaced by CourseCatalog
+- - This class contains all the code for parsing ECU website and building the course catalog.
+- - - After course catalog is generated it is added to the courseLists DB with the ID set to "ECU Course Catalog"
+
+** AccountDatabase (OBSOLETE)
+- AccountDatabase.java is now replaced by AccountDB.java since the txt file was changed to json
+- - AccountDB is the new class that interacts with the accounts.json file
+
+** coursesDB (OBSOLETE)
+- - coursesDB.txt is now replaced by courseLists.json
+- - courseLists is a json file that contains IDs and an ArrayList<Course> associated with that id.
+
+** CourseDatabase (OBSOLETE)
+- CourseDatabase.java is now replaced by CourseListDB.java
+- - CourseListDB is now the new class that interacts with the courseList.json file
+
+** LoginUI.java (COMPLETE)
+** SignUpUI.java (FUNCTIONAL) - basically complete, but could use a back button to go back to login page.
+** AccountDB (COMPLETE)
+** CourseListDB (COMPLETE)
+** CourseCatalog (COMPLETE)
+** Account (COMPLETE)
+** Course (COMPLETE) 
+** ProfileHomeUI (FUNCTIONAL) 
+- The courses tab is complete, user can see as well as edit their courseList from this tab.
+- View schedule tab needs to be made
+- profile tab needs functionality
+- Sign-Out tab works
+- Schedule Tutor session tab needs to be made
+
+
