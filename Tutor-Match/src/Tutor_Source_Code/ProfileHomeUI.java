@@ -25,10 +25,11 @@ import javax.swing.border.EmptyBorder;
 import java.awt.GridLayout;
 import javax.swing.BoxLayout;
 import java.awt.FlowLayout;
-import net.miginfocom.swing.MigLayout;
+import zac.CourseListDB;
 
 @SuppressWarnings("serial")
-public class ProfileHomeUI extends JFrame {
+public class ProfileHomeUI extends JFrame 
+{
 	private ArrayList<Choice> choices;
 	private Account student;
 
@@ -53,25 +54,30 @@ public class ProfileHomeUI extends JFrame {
 	private JButton updateProfileButton;
 	private JPanel editProfilePane;
 	private JPanel scheduleSessionPanel;
-	private static CourseListDB course_database_master;
-
-	private ArrayList<Course> courseList;
+	
+	
+	private static CourseCatalog course_database_master;
+	private ArrayList<Course> studentCourseList;
 	private ArrayList<String> courseNames;
 	private ArrayList<JLabel> courseLabels;
 
 // Create the frame.
-	public ProfileHomeUI(Account student_account, CourseListDB course_db) {
+	public ProfileHomeUI(Account student_account, CourseCatalog course_database_master) {
 		this.student = student_account;
 
-		course_database_master = course_db;
+		this.course_database_master = course_database_master;
 
-		courseList = course_database_master.getCourseList(student.getID().toString());
+		// courseList = course_database_master.getCourseList(student.getID().toString());
 
 		// Initialize components
 		initComponents();
 
 		// Event handler
 		createEvents();
+	}
+
+	public ProfileHomeUI(Account personalized_account, CourseDatabase course_database_master2) {
+		// TODO Auto-generated constructor stub
 	}
 
 	private void createEvents() {
@@ -117,10 +123,10 @@ public class ProfileHomeUI extends JFrame {
 
 				course_database_master.addCourseList(student.getID().toString(), selectedCourses);
 				
-				courseList = course_database_master.getCourseList(student.getID().toString());
+				studentCourseList = course_database_master.getCourseCatalog(student.getID().toString());
 				
 				courseNames.clear();
-				for (Course courses : courseList) {
+				for (Course courses : studentCourseList) {
 					courseNames.add(courses.toString());
 				}
 				for (JLabel label : courseLabels) {
@@ -382,8 +388,8 @@ public class ProfileHomeUI extends JFrame {
 //********************************************************************
 		courseNames = new ArrayList<String>(); // Replace with your actual list of course names
 
-		if (courseList != null) {
-			for (Course courses : courseList) {
+		if (studentCourseList != null) {
+			for (Course courses : studentCourseList) {
 				courseNames.add(courses.toString());
 			}
 		} else {
