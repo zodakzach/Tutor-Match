@@ -1,4 +1,4 @@
-package Tutor_Source_Code;
+package DEPRECATED;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,6 +6,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
+
+import Tutor_Source_Code.Course;
 
 @SuppressWarnings("unused")
 public class CourseDatabase 

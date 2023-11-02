@@ -1,6 +1,5 @@
 package Tutor_Source_Code;
 
-@SuppressWarnings("unused")
 public class Course implements Comparable<Course>
 {
 	private String field;

@@ -30,30 +30,52 @@ public class AccountDB {
 	 * @return A list of loaded accounts.
 	 */
 	private List<Account> loadAccounts() {
-		List<Account> loadedAccounts = new ArrayList<>();
-		try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-			Gson gson = new Gson();
-			Account[] accountArray = gson.fromJson(reader, Account[].class);
-			if (accountArray != null) {
-				loadedAccounts = new ArrayList<>(List.of(accountArray));
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return loadedAccounts;
+	    List<Account> loadedAccounts = new ArrayList<>();
+
+	    try (BufferedReader reader = new BufferedReader(new FileReader(file))) 
+	    {
+	        // Create a Gson object for deserialization
+	        Gson gson = new Gson();
+
+	        // Deserialize the JSON data from the file into an array of Account objects
+	        Account[] accountArray = gson.fromJson(reader, Account[].class);
+
+	        if (accountArray != null) 
+	        {
+	            // If the deserialization was successful, create a List of Account objects
+	            loadedAccounts = new ArrayList<>(List.of(accountArray));
+	        }
+	    } 
+	    catch (IOException e) 
+	    {
+	        // Handle any IOException that might occur during file reading
+	        e.printStackTrace();
+	    }
+	    
+	    // Return the loaded accounts as a List
+	    return loadedAccounts;
 	}
 
 	/**
 	 * Save accounts to a JSON file.
 	 */
 	private void saveAccounts() {
-		try (FileWriter writer = new FileWriter(file)) {
-			Gson gson = new GsonBuilder().setPrettyPrinting().create();
-			String json = gson.toJson(accounts.toArray(new Account[0]));
-			writer.write(json);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	    try (FileWriter writer = new FileWriter(file)) 
+	    {
+	        // Create a Gson object for JSON serialization with pretty printing
+	        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+	        // Convert the 'accounts' collection to a JSON representation
+	        String json = gson.toJson(accounts.toArray(new Account[0]));
+
+	        // Write the JSON data to the file
+	        writer.write(json);
+	    } 
+	    catch (IOException e) 
+	    {
+	        // Handle any IOException that might occur during the file write
+	        e.printStackTrace();
+	    }
 	}
 
 	/**
@@ -65,7 +87,8 @@ public class AccountDB {
 	 * @param isTutor  Indicates if the new account is a tutor or not.
 	 */
 	public void addAccount(String email, String password, String name, Boolean isTutor) {
-		if (!isEmailTaken(email)) {
+		if (!isEmailTaken(email)) 
+		{
 			Account account = new Account(email, password, name, isTutor);
 			accounts.add(account);
 			saveAccounts();
@@ -84,14 +107,14 @@ public class AccountDB {
 	 */
 	public boolean updateAccount(UUID accountId, String newEmail, String newPassword, String newName) {
 		Account accountToUpdate = getAccountById(accountId.toString());
-		if (accountToUpdate != null) {
+		if (accountToUpdate != null) 
+		{
 			// Update the account information.
 			accountToUpdate.setEmail(newEmail);
 			accountToUpdate.setPassword(newPassword);
 			accountToUpdate.setName(newName);
 
 			saveAccounts(); // Save the updated account data to the JSO
-			N file.
 			return true; // Account successfully updated.
 		}
 		return false; // Account not found, update failed.
@@ -150,6 +173,29 @@ public class AccountDB {
 	public Account getAccountById(String accountId) {
 		return accounts.stream().filter(account -> account.getID().toString().equals(accountId)).findFirst()
 				.orElse(null);
+	}
+	
+	/**
+	 * Update the schedule field for an account.
+	 *
+	 * @param accountId   The unique ID of the account to update.
+	 * @param newSchedule The updated schedule for the account.
+	 * @return true if the schedule was successfully updated, false if the account was not found.
+	 */
+	public boolean updateAccountSchedule(UUID accountId, Schedule newSchedule) {
+	    Account accountToUpdate = getAccountById(accountId.toString());
+	    
+	    if (accountToUpdate != null) 
+	    {
+	        // Update the schedule field.
+	        accountToUpdate.setSchedule(newSchedule);
+	        
+	        // Save the updated account data to the JSON file or wherever it's stored.
+	        saveAccounts();
+	        
+	        return true; // Schedule successfully updated.
+	    }
+	    return false; // Account not found, update failed.
 	}
 
 }

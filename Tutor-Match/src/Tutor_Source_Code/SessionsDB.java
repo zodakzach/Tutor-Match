@@ -43,10 +43,17 @@ public class SessionsDB {
      * Loads sessions from the JSON file into the database.
      */
     public void loadSessions() {
-        try (Reader reader = new FileReader(filePath)) {
+        try (Reader reader = new FileReader(filePath)) 
+        {
+            // Define the type of object to deserialize
             Type sessionListType = new TypeToken<List<Session>>(){}.getType();
+
+            // Deserialize the JSON data from the file into the 'sessions' collection
             sessions = gson.fromJson(reader, sessionListType);
-        } catch (IOException e) {
+        } 
+        catch (IOException e) 
+        {
+            // Handle any IOException that might occur during file reading
             e.printStackTrace();
         }
     }
@@ -55,9 +62,14 @@ public class SessionsDB {
      * Saves the sessions to the JSON file.
      */
     public void saveSessions() {
-        try (Writer writer = new FileWriter(filePath)) {
+        try (Writer writer = new FileWriter(filePath)) 
+        {
+            // Serialize the 'sessions' collection to JSON and write it to the file
             gson.toJson(sessions, writer);
-        } catch (IOException e) {
+        } 
+        catch (IOException e) 
+        {
+            // Handle any IOException that might occur during file writing
             e.printStackTrace();
         }
     }
@@ -79,8 +91,10 @@ public class SessionsDB {
      */
     public List<Session> getSessionsByTutorId(UUID tutorId) {
         List<Session> result = new ArrayList<>();
-        for (Session session : sessions) {
-            if (session.getTutorId().equals(tutorId)) {
+        for (Session session : sessions) 
+        {
+            if (session.getTutorId().equals(tutorId)) 
+            {
                 result.add(session);
             }
         }
@@ -95,8 +109,11 @@ public class SessionsDB {
      */
     public List<Session> getSessionsByStudentId(UUID studentId) {
         List<Session> result = new ArrayList<>();
-        for (Session session : sessions) {
-            if (session.getStudentId().equals(studentId)) {
+        
+        for (Session session : sessions) 
+        {
+            if (session.getStudentId().equals(studentId)) 
+            {
                 result.add(session);
             }
         }

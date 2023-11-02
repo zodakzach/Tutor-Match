@@ -31,7 +31,8 @@ public class CourseCatalog {
         try {
             final Document DOCUMENT = Jsoup.connect(URL).get();
 
-            for (Element row : DOCUMENT.select(".acalog-course a")) {
+            for (Element row : DOCUMENT.select(".acalog-course a")) 
+            {
                 line = row.text();
 
                 field = line.substring(0, 4);
@@ -42,7 +43,9 @@ public class CourseCatalog {
 
                 courseCatalog.add(course);
             }
-        } catch (Exception e) {
+        } 
+        catch (Exception e) 
+        {
             e.printStackTrace();
         }
     }

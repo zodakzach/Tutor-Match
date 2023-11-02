@@ -58,9 +58,12 @@ public class CourseListDB {
 	 */
 	private void saveToJson() {
 		Gson gson = new Gson();
-		try (Writer writer = new FileWriter(file)) {
+		try (Writer writer = new FileWriter(file)) 
+		{
 			gson.toJson(courses, writer);
-		} catch (IOException e) {
+		} 
+		catch (IOException e) 
+		{
 			e.printStackTrace();
 		}
 	}
@@ -69,32 +72,48 @@ public class CourseListDB {
 	 * Private method to load course list data from a JSON file.
 	 */
 	private void loadFromJson() {
-		Gson gson = new Gson();
-		try (Reader reader = new FileReader(file)) {
-			JsonObject jsonObject = gson.fromJson(reader, JsonObject.class);
-			courses = new HashMap<>();
+	    // Create a Gson object for JSON deserialization
+	    Gson gson = new Gson();
 
-			if (jsonObject != null) {
-				for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
-					String accountId = entry.getKey();
-					JsonElement value = entry.getValue();
+	    try (Reader reader = new FileReader(file)) 
+	    {
+	        // Deserialize the JSON data from the file into a JsonObject
+	        JsonObject jsonObject = gson.fromJson(reader, JsonObject.class);
 
-					if (value.isJsonArray()) {
-						JsonArray jsonArray = value.getAsJsonArray();
-						ArrayList<Course> courseList = new ArrayList<>();
+	        if (jsonObject != null) 
+	        {
+	            // Iterate through the entries (key-value pairs) in the JsonObject
+	            for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) 
+	            {
+	                // Extract the account ID (key) and its associated JSON value
+	                String accountId = entry.getKey();
+	                JsonElement value = entry.getValue();
 
-						for (int i = 0; i < jsonArray.size(); i++) {
-							Course course = gson.fromJson(jsonArray.get(i), Course.class);
-							courseList.add(course);
-						}
+	                // Check if the JSON value is an array
+	                if (value.isJsonArray()) 
+	                {
+	                    JsonArray jsonArray = value.getAsJsonArray();
+	                    ArrayList<Course> courseList = new ArrayList<>();
 
-						courses.put(accountId, courseList);
-					}
-				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	                    // Iterate through the elements in the JSON array
+	                    for (int i = 0; i < jsonArray.size(); i++) 
+	                    {
+	                        // Deserialize each element into a Course object
+	                        Course course = gson.fromJson(jsonArray.get(i), Course.class);
+	                        courseList.add(course);
+	                    }
+
+	                    // Populate the 'courses' HashMap with the account ID and associated course list
+	                    courses.put(accountId, courseList);
+	                }
+	            }
+	        }
+	    } 
+	    catch (IOException e) 
+	    {
+	        // Handle any IOException that might occur during file reading
+	        e.printStackTrace();
+	    }
 	}
 
 	/**
@@ -107,11 +126,16 @@ public class CourseListDB {
 	private List<String> findAccountsByCourse(String courseName) {
 		List<String> matchingAccountIds = new ArrayList<>();
 
-		for (Map.Entry<String, ArrayList<Course>> entry : courses.entrySet()) {
+		for (Map.Entry<String, ArrayList<Course>> entry : courses.entrySet()) 
+		{
 			ArrayList<Course> courseList = entry.getValue();
-			if (courseList != null) {
-				for (Course course : courseList) {
-					if (course != null && course.toString().equalsIgnoreCase(courseName)) {
+			
+			if (courseList != null) 
+			{
+				for (Course course : courseList) 
+				{
+					if (course != null && course.toString().equalsIgnoreCase(courseName)) 
+					{
 						matchingAccountIds.add(entry.getKey()); // Found the course in this account's list.
 						break; // No need to continue checking this account's course list.
 					}
@@ -132,16 +156,19 @@ public class CourseListDB {
 	public List<String> findAccountsByCourseList(ArrayList<Course> courseList) {
 		List<String> matchingAccountIds = new ArrayList<>();
 
-		for (Course course : courseList) {
+		for (Course course : courseList) 
+		{
 			List<String> accountIds = findAccountsByCourse(course.toString());
 
-			if (!accountIds.isEmpty()) {
+			if (!accountIds.isEmpty()) 
+			{
 				matchingAccountIds.addAll(accountIds);
 			}
 		}
 
 		// Remove duplicates, if any, from the list of matching account IDs.
 		Set<String> uniqueMatchingAccountIds = new HashSet<>(matchingAccountIds);
+		
 		return new ArrayList<>(uniqueMatchingAccountIds);
 	}
 
@@ -153,7 +180,8 @@ public class CourseListDB {
 	 *         account does not exist.
 	 */
 	public boolean removeCourseList(String accountId) {
-		if (courses.containsKey(accountId)) {
+		if (courses.containsKey(accountId)) 
+		{
 			courses.remove(accountId);
 			saveToJson(); // Save the updated course list data to the JSON file.
 			return true; // Course list successfully removed.

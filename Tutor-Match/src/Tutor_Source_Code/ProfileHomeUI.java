@@ -10,7 +10,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -20,83 +19,135 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
-import java.awt.GridLayout;
-import java.awt.FlowLayout;
-import java.awt.BorderLayout;
+
+import Tutor_Source_Code.Schedule.ACCESS;
+
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JSeparator;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
 @SuppressWarnings("serial")
 public class ProfileHomeUI extends JFrame {
-	private ArrayList<Choice> choices;
+	
+	/*
+	 * ACCOUNT RELATED
+	 */
 	private Account student;
+	private List<Session> accountSessions;
+	private Schedule schedule;
+	private ArrayList<Course> courseList;
+	private int numOfSessions;
+	private int totalSessionHours;
+	
+	/*
+	 * DATABASES
+	 */
+	private static SessionsDB sessions_DB_master = new SessionsDB("src/Databases/sessions.json");
+	private static AccountDB account_DB_master = new AccountDB("src/Databases/accounts.json");
+	private static CourseListDB course_database_master;
 
-	private JPanel contentPane;
+	/*
+	 * BUTTONS
+	 */
 	private JButton confirmLogoutButton;
 	private JButton cancelLogoutButton;
 	private JButton logoutButton;
-	private JLayeredPane layeredLogoutPane;
+	private JButton editProfileButton;
+	private JButton updateProfileButton;
+	private JButton editCoursesButton;
+	private JButton saveCourseChangesButton;
+	private JButton changeAvailabilityButton;
+
+	/*
+	 * PANELS
+	 */
 	private JPanel logoutPanel;
 	private JPanel logoutConfirmPanel;
 	private JPanel coursesTabPanel;
 	private JPanel scheduleTabPanel;
-	private JLayeredPane layeredSessionPane;
-	private JButton saveCourseChangesButton;
-	private JLayeredPane layeredCoursesPane;
-	private JButton editCoursesButton;
-	private JPanel editCoursesPanel;
-	private JPanel myCoursesPanel;
-	private JLayeredPane accountLayeredPane;
-	private JPanel accountPane;
-	private JButton editProfileButton;
-	private JButton updateProfileButton;
 	private JPanel editProfilePane;
 	private JPanel scheduleSessionPanel;
-	private static CourseListDB course_database_master;
+	private JPanel changeAvailabilityPanel;
+	private JPanel contentPane;
+	private JPanel editCoursesPanel;
+	private JPanel myCoursesPanel;
+	private JPanel accountPane;
 
-	private ArrayList<Course> courseList;
+	/*
+	 * LAYEREDPANES
+	 */
+	private JLayeredPane layeredLogoutPane;
+	private JLayeredPane layeredSessionPane;
+	private JLayeredPane layeredCoursesPane;
+	private JLayeredPane accountLayeredPane;
+	private JLayeredPane layeredSchedulePane;
+
+	/*
+	 * LABELS
+	 */
+	private JLabel newNameLabel;
+	private JLabel newPasswordLabel;
+	private JLabel newEmailLabel;
+
+	/*
+	 * LISTS
+	 */
+	private ArrayList<Choice> choices;
 	private ArrayList<String> courseNames;
 	private ArrayList<JLabel> courseLabels;
-	private JLabel newNameLabel;
+	
+	/*
+	 * TEXTFIELDS
+	 */
 	private JTextField newEmailTextField;
-	private JLabel newEmailLabel;
 	private JTextField newNameTextFIeld;
-	private JLabel newPasswordLabel;
+	
+	/*
+	 * PASSFIELDS
+	 */
 	private JPasswordField passwordField;
+	
+	/*
+	 * LAYOUT RELATED
+	 */
 	private JSeparator separator;
+	private CardLayout scheduleCardLayout;
 	
-	private SessionsDB master_sessions_DB = new SessionsDB("src/Databases/sessions.json");
-	private List<Session> accountSessions;
-	
-	private int numOfSessions;
-	private int totalSessionHours;
 
 // Create the frame.
 	public ProfileHomeUI(Account student_account, CourseListDB course_db) {
+		// Set the 'student' property to the provided 'student_account'
 		this.student = student_account;
 
+		// Initialize 'course_database_master' using the 'course_db' parameter
 		course_database_master = course_db;
 
+		// Retrieve the list of courses associated with the student and store it in 'courseList'
 		courseList = course_database_master.getCourseList(student.getID().toString());
-		
+
+		// Check if the student is a tutor
 		if (student.getTutor()) {
-			accountSessions = master_sessions_DB.getSessionsByTutorId(student.getID());
+		    // If the student is a tutor, fetch their sessions and schedule
+		    accountSessions = sessions_DB_master.getSessionsByTutorId(student.getID());
+		    schedule = student.getSchedule();
+		} else {
+		    // If the student is not a tutor, fetch their sessions and set the schedule to null
+		    accountSessions = sessions_DB_master.getSessionsByStudentId(student.getID());
+		    schedule = null;
 		}
-		else {
-			accountSessions = master_sessions_DB.getSessionsByStudentId(student.getID());
-		}
-		
+
+		// Calculate the number of sessions in 'accountSessions' and store it in 'numOfSessions'
 		numOfSessions = accountSessions.size();
-		
+
+		// Initialize 'totalSessionHours' to calculate the sum of session hours
 		for (Session session : accountSessions) {
-			totalSessionHours += session.getSessionLengthHours();
+		    totalSessionHours += session.getSessionLengthHours();
 		}
 
 		// Initialize components
@@ -134,33 +185,44 @@ public class ProfileHomeUI extends JFrame {
 
 		saveCourseChangesButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				// Initialize an ArrayList to store selected courses
 				ArrayList<Course> selectedCourses = new ArrayList<>();
 
+				// Iterate through the 'choices' list
 				for (Choice choice : choices) {
-					String[] selectedOption = choice.getSelectedItem().split("\\s+");
+				    // Split the selected item's text based on white space
+				    String[] selectedOption = choice.getSelectedItem().split("\\s+");
 
-					Course course = new Course(selectedOption[0], Integer.parseInt(selectedOption[1]),
-							selectedOption[2]);
+				    // Create a 'Course' object using the parsed information
+				    Course course = new Course(selectedOption[0], Integer.parseInt(selectedOption[1]), selectedOption[2]);
 
-					if (course != null) {
-						selectedCourses.add(course);
-					}
+				    // Check if the 'course' object is not null and add it to 'selectedCourses'
+				    if (course != null) {
+				        selectedCourses.add(course);
+				    }
 				}
 
+				// Add the selected courses to a database
 				course_database_master.addCourseList(student.getID().toString(), selectedCourses);
-				
+
+				// Update the course list from the database for the student
 				courseList = course_database_master.getCourseList(student.getID().toString());
-				
+
+				// Clear the 'courseNames' ArrayList and populate it with course names as strings
 				courseNames.clear();
 				for (Course courses : courseList) {
-					courseNames.add(courses.toString());
+				    courseNames.add(courses.toString());
 				}
+
+				// Remove any existing JLabel components from 'myCoursesPanel'
 				for (JLabel label : courseLabels) {
-					myCoursesPanel.remove(label);
+				    myCoursesPanel.remove(label);
 				}
+
+				// Clear the 'courseLabels' ArrayList and create new JLabel components
 				courseLabels.clear();
 				createCourseLabels();
-				
+
 				JOptionPane.showMessageDialog(null, "Courses Updated!");
 				layeredCoursesPane.removeAll();
 				layeredCoursesPane.add(myCoursesPanel);
@@ -200,6 +262,17 @@ public class ProfileHomeUI extends JFrame {
 				accountLayeredPane.revalidate();
 			}
 		});
+		
+		//Button only exists for tutor accounts
+		if(changeAvailabilityButton != null) 
+		{
+			changeAvailabilityButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					scheduleCardLayout.show(layeredSchedulePane, "panel2");
+				}
+			});
+		}
+
 
 	}
 
@@ -236,13 +309,42 @@ public class ProfileHomeUI extends JFrame {
 				"View Schedule");
 		scheduleTabPanel.setLayout(new GridLayout(0, 1, 0, 0));
 
-		JLayeredPane layeredSchedulePane = new JLayeredPane();
+		layeredSchedulePane = new JLayeredPane();
 		scheduleTabPanel.add(layeredSchedulePane);
-		layeredSchedulePane.setLayout(new CardLayout(0, 0));
+		scheduleCardLayout = new CardLayout(0,0);
+		layeredSchedulePane.setLayout(scheduleCardLayout);
 
-		JPanel panel = new JPanel();
-		layeredSchedulePane.add(panel, "name_47979929479004");
-		panel.setLayout(new GridLayout(1, 0, 0, 0));
+		JPanel schedulePanel = new JPanel();
+		layeredSchedulePane.add(schedulePanel, "panel1");
+		GridBagLayout gbl_schedulePanel = new GridBagLayout();
+		gbl_schedulePanel.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gbl_schedulePanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gbl_schedulePanel.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_schedulePanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		schedulePanel.setLayout(gbl_schedulePanel);
+		
+		changeAvailabilityPanel = new JPanel();
+		changeAvailabilityPanel.setBackground(new Color(244, 254, 255));
+		layeredSchedulePane.add(changeAvailabilityPanel, "panel2");
+		GridBagLayout gbl_changeAvailabilityPanel = new GridBagLayout();
+		gbl_changeAvailabilityPanel.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gbl_changeAvailabilityPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gbl_changeAvailabilityPanel.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_changeAvailabilityPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		changeAvailabilityPanel.setLayout(gbl_changeAvailabilityPanel);
+		
+		/*
+		 *  Checks to see if  account is a tutor and if so it generates the Change Availability button so that tutors can change their availabilities 
+		 *  Students wont need that option
+		 */
+		if (student.getTutor()) {
+			changeAvailabilityButton = new JButton("Change Availability");
+			GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
+			gbc_btnNewButton.gridx = 13;
+			gbc_btnNewButton.gridy = 14;
+			schedulePanel.add(changeAvailabilityButton, gbc_btnNewButton);
+
+		}
 
 		JPanel sessionTabPanel = new JPanel();
 		sessionTabPanel.setBackground(new Color(0, 165, 255));
@@ -367,12 +469,13 @@ public class ProfileHomeUI extends JFrame {
 		layeredCoursesPane.setForeground(new Color(0, 160, 254));
 		coursesTabPanel.add(layeredCoursesPane);
 
-//**********************************************************************************************************
-		// ArrayList<Jlabel> labels = new ArrayList<Jlabel>;
-
-//********************************************************************
+		// Inits courseNames list to hold courses as strings
 		courseNames = new ArrayList<String>(); 
 
+		/*
+		 * Checks if there are courses in students courseList and if so it converts them all to strings and adds them to the courseNames list
+		 * This courseNames list is used to generate the courseLabels
+		 */
 		if (courseList != null) {
 			for (Course courses : courseList) {
 				courseNames.add(courses.toString());
@@ -381,8 +484,6 @@ public class ProfileHomeUI extends JFrame {
 			courseNames.add("No Courses in Course List");
 		}
 
-		// Define an ArrayList to hold your JLabels
-		courseLabels = new ArrayList<JLabel>();
 		layeredCoursesPane.setLayout(new CardLayout(0, 0));
 		
 		myCoursesPanel = new JPanel();
@@ -396,7 +497,11 @@ public class ProfileHomeUI extends JFrame {
 		myCoursesLabel.setFont(new Font("Source Code Pro", Font.BOLD, 36));
 		myCoursesPanel.add(myCoursesLabel);
 		
+		// CREATES THE COURSE LABELS FOR THE FIRST TIME WITH COURSENAMES FROM COURSELIST
+		courseLabels = new ArrayList<JLabel>();
 		createCourseLabels();
+		//**************************************************************************
+		
 		contentPane.setLayout(new CardLayout(0, 0));
 						
 		editCoursesButton = new JButton("Edit Courses");
@@ -482,22 +587,34 @@ public class ProfileHomeUI extends JFrame {
 	}
 
 	private void populateChoice(ArrayList<Choice> c) {
-		for (int i = 0; i < c.size(); i++) {
-			for (Course course : course_database_master.getCourseList("ECU Course Catalog")) {
-				c.get(i).add(course.toString());
-			}
-		}
+        // Retrieve the list of courses from the "ECU Course Catalog" using the 'course_database_master'
+        ArrayList<Course> courses = course_database_master.getCourseList("ECU Course Catalog");
+
+	    // Iterate through the ArrayList of Choice components
+	    for (int i = 0; i < c.size(); i++) {
+	    	
+	        // Iterate through the retrieved list of courses
+	        for (Course course : courses) {	
+	            // Add the string representation of each course to the current Choice component
+	            c.get(i).add(course.toString());
+	        }
+	    }
 	}
 
+
 	private void createCourseLabels() {
-		for (String courseName : courseNames) {
-			JLabel courseLabel = new JLabel("<html><div style='text-align: center;" + "px;'>" + courseName + "</div></html>");
+	    for (String courseName : courseNames) {
+	        // Create a new JLabel with HTML-formatted text
+	        JLabel courseLabel = new JLabel("<html><div style='text-align: center;'>" + courseName + "</div></html>");
 
-		    courseLabel.setHorizontalAlignment(SwingConstants.CENTER); // Center the text
-			myCoursesPanel.add(courseLabel);
+	        // Center the text within the label
+	        courseLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-			// Add the created label to the ArrayList for future reference
-			courseLabels.add(courseLabel);
-		}
+	        // Add the created label to the 'myCoursesPanel'
+	        myCoursesPanel.add(courseLabel);
+
+	        // Add the created label to the 'courseLabels' ArrayList for future reference
+	        courseLabels.add(courseLabel);
+	    }
 	}
 }

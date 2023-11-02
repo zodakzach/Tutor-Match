@@ -1,4 +1,4 @@
-package Tutor_Source_Code;
+package DEPRECATED;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,6 +10,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
+import Tutor_Source_Code.Course;
 
 @SuppressWarnings("unused")
 public class GetCourseList
