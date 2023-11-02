@@ -13,7 +13,7 @@ public class Main
 	private static final String COURSE_FILE = "src/Databases/courseLists.json";
 	
 	// private static final String STUDENT_FILE = "src/Databases/studentDB.txt";
-	// private static final String COURSE_FILE = "src/Databases/master_coursesDB.txt";
+	// private static final String COURSE_FILE = "src/Databases/master_coursesDB.txt";l
 	
 	// file paths
 	// ".getAbsolutetPath()" is used, so it should find the path on anyone's computer on its own

@@ -90,7 +90,8 @@ public class AccountDB {
 			accountToUpdate.setPassword(newPassword);
 			accountToUpdate.setName(newName);
 
-			saveAccounts(); // Save the updated account data to the JSON file.
+			saveAccounts(); // Save the updated account data to the JSO
+			N file.
 			return true; // Account successfully updated.
 		}
 		return false; // Account not found, update failed.

@@ -25,7 +25,6 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import java.awt.GridLayout;
 import java.awt.FlowLayout;
-<<<<<<< HEAD
 import java.awt.BorderLayout;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
@@ -33,13 +32,9 @@ import javax.swing.JSeparator;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-=======
-import zac.CourseListDB;
->>>>>>> 06d8a38e0b0cf3e3ded7642ce99193ac0dd4b78a
 
 @SuppressWarnings("serial")
-public class ProfileHomeUI extends JFrame 
-{
+public class ProfileHomeUI extends JFrame {
 	private ArrayList<Choice> choices;
 	private Account student;
 
@@ -64,10 +59,9 @@ public class ProfileHomeUI extends JFrame
 	private JButton updateProfileButton;
 	private JPanel editProfilePane;
 	private JPanel scheduleSessionPanel;
-	
-	
-	private static CourseCatalog course_database_master;
-	private ArrayList<Course> studentCourseList;
+	private static CourseListDB course_database_master;
+
+	private ArrayList<Course> courseList;
 	private ArrayList<String> courseNames;
 	private ArrayList<JLabel> courseLabels;
 	private JLabel newNameLabel;
@@ -85,12 +79,11 @@ public class ProfileHomeUI extends JFrame
 	private int totalSessionHours;
 
 // Create the frame.
-	public ProfileHomeUI(Account student_account, CourseCatalog course_database_master) {
+	public ProfileHomeUI(Account student_account, CourseListDB course_db) {
 		this.student = student_account;
 
-		this.course_database_master = course_database_master;
+		course_database_master = course_db;
 
-<<<<<<< HEAD
 		courseList = course_database_master.getCourseList(student.getID().toString());
 		
 		if (student.getTutor()) {
@@ -105,19 +98,12 @@ public class ProfileHomeUI extends JFrame
 		for (Session session : accountSessions) {
 			totalSessionHours += session.getSessionLengthHours();
 		}
-=======
-		// courseList = course_database_master.getCourseList(student.getID().toString());
->>>>>>> 06d8a38e0b0cf3e3ded7642ce99193ac0dd4b78a
 
 		// Initialize components
 		initComponents();
 
 		// Event handler
 		createEvents();
-	}
-
-	public ProfileHomeUI(Account personalized_account, CourseDatabase course_database_master2) {
-		// TODO Auto-generated constructor stub
 	}
 
 	private void createEvents() {
@@ -163,10 +149,10 @@ public class ProfileHomeUI extends JFrame
 
 				course_database_master.addCourseList(student.getID().toString(), selectedCourses);
 				
-				studentCourseList = course_database_master.getCourseCatalog(student.getID().toString());
+				courseList = course_database_master.getCourseList(student.getID().toString());
 				
 				courseNames.clear();
-				for (Course courses : studentCourseList) {
+				for (Course courses : courseList) {
 					courseNames.add(courses.toString());
 				}
 				for (JLabel label : courseLabels) {
@@ -196,6 +182,8 @@ public class ProfileHomeUI extends JFrame
 		updateProfileButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// update profile
+				
+				
 				JOptionPane.showMessageDialog(null, "Profile Updated!");
 				accountLayeredPane.removeAll();
 				accountLayeredPane.add(accountPane);
@@ -385,8 +373,8 @@ public class ProfileHomeUI extends JFrame
 //********************************************************************
 		courseNames = new ArrayList<String>(); 
 
-		if (studentCourseList != null) {
-			for (Course courses : studentCourseList) {
+		if (courseList != null) {
+			for (Course courses : courseList) {
 				courseNames.add(courses.toString());
 			}
 		} else {
