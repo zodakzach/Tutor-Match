@@ -25,15 +25,15 @@
   },
   {
     "id": "1316fab9-f38d-461e-b999-a8813b1eb671",
-    "email": "test",
+    "email": "student",
     "password": "pass",
-    "name": "testingAccount",
+    "name": "testAccount",
     "tutor": false,
     "studyTime": 0
   },
   {
     "id": "14032a86-e9ee-4573-bcbd-19262ba88cd2",
-    "email": "tutor@email.com",
+    "email": "tutor",
     "password": "pass",
     "name": "testTutor",
     "tutor": true,

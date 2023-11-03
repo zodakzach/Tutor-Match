@@ -3,34 +3,51 @@ package Tutor_Source_Code;
 import java.awt.CardLayout;
 import java.awt.Choice;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import Tutor_Source_Code.Schedule.ACCESS;
 
 import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
+import javax.swing.ListSelectionModel;
 import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import javax.swing.JComboBox;
+import javax.swing.ListModel;
 
 @SuppressWarnings("serial")
 public class ProfileHomeUI extends JFrame {
@@ -63,7 +80,8 @@ public class ProfileHomeUI extends JFrame {
 	private JButton editCoursesButton;
 	private JButton saveCourseChangesButton;
 	private JButton changeAvailabilityButton;
-
+	private JButton btnNewButton;
+	
 	/*
 	 * PANELS
 	 */
@@ -94,13 +112,30 @@ public class ProfileHomeUI extends JFrame {
 	private JLabel newNameLabel;
 	private JLabel newPasswordLabel;
 	private JLabel newEmailLabel;
-
+	private JLabel nameLabel;
+	private JLabel emailLabel; 
+	private JLabel lblNewLabel_1;
+	private JLabel lblNewLabel_2;
+	private JLabel lblNewLabel_3;
+	private JLabel lblNewLabel_4;
+	private JLabel lblNewLabel_5;
+	private JLabel lblNewLabel_6;
+	private JLabel lblNewLabel_7;
+	private JLabel lblNewLabel_8;
 	/*
 	 * LISTS
 	 */
 	private ArrayList<Choice> choices;
 	private ArrayList<String> courseNames;
 	private ArrayList<JLabel> courseLabels;
+	private JList<JCheckBox> mondayList;
+	private JList<JCheckBox> tuesdayList;
+	private JList<JCheckBox> wednesdayList;
+	private JList<JCheckBox> thursdayList;
+	private JList<JCheckBox> fridayList;
+	private JList<JCheckBox> saturdayList;
+	private JList<JCheckBox> sundayList;
+
 	
 	/*
 	 * TEXTFIELDS
@@ -117,8 +152,27 @@ public class ProfileHomeUI extends JFrame {
 	 * LAYOUT RELATED
 	 */
 	private JSeparator separator;
-	private CardLayout scheduleCardLayout;
+	private CardLayout scheduleCardLayout;	
+
+	private JScrollPane scrollPane_1;
+	private JScrollPane scrollPane_2;
+	private JScrollPane scrollPane_3;
+	private JScrollPane scrollPane_4;
+	private JScrollPane scrollPane_5;
+	private JScrollPane scrollPane_6;
 	
+    // Create a HashMap to store the checkboxes for each day
+    HashMap<String, DefaultListModel<JCheckBox>> checkBoxModelsMap = new HashMap<>();
+    private JButton btnNewButton_1;
+    private JButton btnNewButton_2;
+    private JButton btnNewButton_3;
+    private JButton btnNewButton_4;
+    private JButton btnNewButton_5;
+    private JButton btnNewButton_6;
+    private JButton btnNewButton_7;
+
+
+
 
 // Create the frame.
 	public ProfileHomeUI(Account student_account, CourseListDB course_db) {
@@ -244,11 +298,20 @@ public class ProfileHomeUI extends JFrame {
 		updateProfileButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// update profile
+				//Updates student account in DB with new name, email, and password.
+				account_DB_master.updateAccount(student.getID(), newEmailTextField.getText(), new String(passwordField.getPassword()), newNameTextFIeld.getText());
 				
+				//update student account with the updated account from DB
+				student = account_DB_master.getAccountById(student.getID().toString());
 				
+
 				JOptionPane.showMessageDialog(null, "Profile Updated!");
 				accountLayeredPane.removeAll();
 				accountLayeredPane.add(accountPane);
+					
+				nameLabel.setText(student.getName());
+				emailLabel.setText(student.getEmail());
+				
 				accountLayeredPane.repaint();
 				accountLayeredPane.revalidate();
 			}
@@ -256,6 +319,12 @@ public class ProfileHomeUI extends JFrame {
 
 		editProfileButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				newNameTextFIeld.setText(student.getName());
+				newEmailTextField.setText(student.getEmail());
+				passwordField.setText(student.getPassword());
+				
+				
 				accountLayeredPane.removeAll();
 				accountLayeredPane.add(editProfilePane);
 				accountLayeredPane.repaint();
@@ -272,6 +341,7 @@ public class ProfileHomeUI extends JFrame {
 				}
 			});
 		}
+	
 
 
 	}
@@ -319,30 +389,285 @@ public class ProfileHomeUI extends JFrame {
 		GridBagLayout gbl_schedulePanel = new GridBagLayout();
 		gbl_schedulePanel.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gbl_schedulePanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-		gbl_schedulePanel.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_schedulePanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_schedulePanel.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_schedulePanel.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
 		schedulePanel.setLayout(gbl_schedulePanel);
 		
 		changeAvailabilityPanel = new JPanel();
 		changeAvailabilityPanel.setBackground(new Color(244, 254, 255));
 		layeredSchedulePane.add(changeAvailabilityPanel, "panel2");
 		GridBagLayout gbl_changeAvailabilityPanel = new GridBagLayout();
-		gbl_changeAvailabilityPanel.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-		gbl_changeAvailabilityPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-		gbl_changeAvailabilityPanel.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_changeAvailabilityPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_changeAvailabilityPanel.columnWidths = new int[]{120, 120, 120, 131, 120, 120, 120};
+		gbl_changeAvailabilityPanel.rowHeights = new int[]{75, 36, 200, 0, 50};
+		gbl_changeAvailabilityPanel.columnWeights = new double[]{0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0};
+		gbl_changeAvailabilityPanel.rowWeights = new double[]{0.0, 0.0, 1.0, 0.0, 0.0};
 		changeAvailabilityPanel.setLayout(gbl_changeAvailabilityPanel);
 		
+		        
+		        lblNewLabel_1 = new JLabel("Weekly Availability");
+		        lblNewLabel_1.setFont(new Font("Lucida Grande", Font.PLAIN, 38));
+		        GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
+		        gbc_lblNewLabel_1.gridwidth = 3;
+		        gbc_lblNewLabel_1.insets = new Insets(0, 0, 5, 5);
+		        gbc_lblNewLabel_1.gridx = 2;
+		        gbc_lblNewLabel_1.gridy = 0;
+		        changeAvailabilityPanel.add(lblNewLabel_1, gbc_lblNewLabel_1);
+		        
+		        lblNewLabel_2 = new JLabel("Monday");
+		        lblNewLabel_2.setVerticalAlignment(SwingConstants.TOP);
+		        GridBagConstraints gbc_lblNewLabel_2 = new GridBagConstraints();
+		        gbc_lblNewLabel_2.anchor = GridBagConstraints.SOUTH;
+		        gbc_lblNewLabel_2.insets = new Insets(0, 0, 5, 5);
+		        gbc_lblNewLabel_2.gridx = 0;
+		        gbc_lblNewLabel_2.gridy = 1;
+		        changeAvailabilityPanel.add(lblNewLabel_2, gbc_lblNewLabel_2);
+		        
+		        lblNewLabel_3 = new JLabel("Tuesday");
+		        lblNewLabel_3.setVerticalAlignment(SwingConstants.TOP);
+		        GridBagConstraints gbc_lblNewLabel_3 = new GridBagConstraints();
+		        gbc_lblNewLabel_3.anchor = GridBagConstraints.SOUTH;
+		        gbc_lblNewLabel_3.insets = new Insets(0, 0, 5, 5);
+		        gbc_lblNewLabel_3.gridx = 1;
+		        gbc_lblNewLabel_3.gridy = 1;
+		        changeAvailabilityPanel.add(lblNewLabel_3, gbc_lblNewLabel_3);
+		        
+		        lblNewLabel_4 = new JLabel("Wednesday");
+		        lblNewLabel_4.setVerticalAlignment(SwingConstants.TOP);
+		        GridBagConstraints gbc_lblNewLabel_4 = new GridBagConstraints();
+		        gbc_lblNewLabel_4.anchor = GridBagConstraints.SOUTH;
+		        gbc_lblNewLabel_4.insets = new Insets(0, 0, 5, 5);
+		        gbc_lblNewLabel_4.gridx = 2;
+		        gbc_lblNewLabel_4.gridy = 1;
+		        changeAvailabilityPanel.add(lblNewLabel_4, gbc_lblNewLabel_4);
+		        
+		        lblNewLabel_5 = new JLabel("Thursday");
+		        lblNewLabel_5.setVerticalAlignment(SwingConstants.TOP);
+		        GridBagConstraints gbc_lblNewLabel_5 = new GridBagConstraints();
+		        gbc_lblNewLabel_5.anchor = GridBagConstraints.SOUTH;
+		        gbc_lblNewLabel_5.insets = new Insets(0, 0, 5, 5);
+		        gbc_lblNewLabel_5.gridx = 3;
+		        gbc_lblNewLabel_5.gridy = 1;
+		        changeAvailabilityPanel.add(lblNewLabel_5, gbc_lblNewLabel_5);
+		        
+		        lblNewLabel_6 = new JLabel("Friday");
+		        lblNewLabel_6.setVerticalAlignment(SwingConstants.TOP);
+		        GridBagConstraints gbc_lblNewLabel_6 = new GridBagConstraints();
+		        gbc_lblNewLabel_6.anchor = GridBagConstraints.SOUTH;
+		        gbc_lblNewLabel_6.insets = new Insets(0, 0, 5, 5);
+		        gbc_lblNewLabel_6.gridx = 4;
+		        gbc_lblNewLabel_6.gridy = 1;
+		        changeAvailabilityPanel.add(lblNewLabel_6, gbc_lblNewLabel_6);
+		        
+		        lblNewLabel_7 = new JLabel("Saturday");
+		        lblNewLabel_7.setVerticalAlignment(SwingConstants.TOP);
+		        GridBagConstraints gbc_lblNewLabel_7 = new GridBagConstraints();
+		        gbc_lblNewLabel_7.anchor = GridBagConstraints.SOUTH;
+		        gbc_lblNewLabel_7.insets = new Insets(0, 0, 5, 5);
+		        gbc_lblNewLabel_7.gridx = 5;
+		        gbc_lblNewLabel_7.gridy = 1;
+		        changeAvailabilityPanel.add(lblNewLabel_7, gbc_lblNewLabel_7);
+		        
+		        lblNewLabel_8 = new JLabel("Sunday");
+		        lblNewLabel_8.setVerticalAlignment(SwingConstants.TOP);
+		        GridBagConstraints gbc_lblNewLabel_8 = new GridBagConstraints();
+		        gbc_lblNewLabel_8.anchor = GridBagConstraints.SOUTH;
+		        gbc_lblNewLabel_8.insets = new Insets(0, 0, 5, 0);
+		        gbc_lblNewLabel_8.gridx = 6;
+		        gbc_lblNewLabel_8.gridy = 1;
+		        changeAvailabilityPanel.add(lblNewLabel_8, gbc_lblNewLabel_8);
+		        
+
+		        // Days of the week
+		        String[] daysOfWeek = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+
+		        // Initialize checkboxes for each day
+		        for (String day : daysOfWeek) 
+		        {
+		            DefaultListModel<JCheckBox> checkBoxModel = new DefaultListModel<>();
+		            
+		            for (int i = 0; i < 24; i++) 
+		            {
+		                JCheckBox checkBox = new JCheckBox(String.format("%02d:00", i));
+		             // Add a custom property to indicate the day
+		                checkBox.putClientProperty("day", day);
+		                
+		                checkBoxModel.addElement(checkBox);
+		            }
+		            checkBoxModelsMap.put(day, checkBoxModel);
+		        }
+
+		        mondayList = new JList<JCheckBox>(checkBoxModelsMap.get("Monday"));
+		        mondayList.setValueIsAdjusting(true);
+                mondayList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		        //int[] indices = {1, 2,3,4,5};
+		        //mondayList.setSelectedIndices(indices);
+		        mondayList.setVisibleRowCount(12);
+
+		        mondayList.setCellRenderer(new CheckboxListCellRenderer());		        
+		                // Allow multiple selections
+		                
+		                        JScrollPane scrollPane = new JScrollPane(mondayList);
+		                        
+		                        		GridBagConstraints gbc_list = new GridBagConstraints();
+		                        		gbc_list.insets = new Insets(0, 0, 5, 5);
+		                        		gbc_list.fill = GridBagConstraints.BOTH;
+		                        		gbc_list.gridx = 0;
+		                        		gbc_list.gridy = 2;
+		                        		changeAvailabilityPanel.add(scrollPane, gbc_list);
+		                        		
+		                        		scrollPane_1 = new JScrollPane((Component) null);
+		                        		GridBagConstraints gbc_scrollPane_1 = new GridBagConstraints();
+		                        		gbc_scrollPane_1.insets = new Insets(0, 0, 5, 5);
+		                        		gbc_scrollPane_1.fill = GridBagConstraints.BOTH;
+		                        		gbc_scrollPane_1.gridx = 1;
+		                        		gbc_scrollPane_1.gridy = 2;
+		                        		changeAvailabilityPanel.add(scrollPane_1, gbc_scrollPane_1);
+		                        		
+		                        		tuesdayList = new JList<JCheckBox>(checkBoxModelsMap.get("Tuesday"));
+		                        		tuesdayList.setValueIsAdjusting(true);
+		                        		tuesdayList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		                		        tuesdayList.setCellRenderer(new CheckboxListCellRenderer());		        
+
+		                        		scrollPane_1.setViewportView(tuesdayList);
+		                        		
+		                        		scrollPane_2 = new JScrollPane((Component) null);
+		                        		GridBagConstraints gbc_scrollPane_2 = new GridBagConstraints();
+		                        		gbc_scrollPane_2.insets = new Insets(0, 0, 5, 5);
+		                        		gbc_scrollPane_2.fill = GridBagConstraints.BOTH;
+		                        		gbc_scrollPane_2.gridx = 2;
+		                        		gbc_scrollPane_2.gridy = 2;
+		                        		changeAvailabilityPanel.add(scrollPane_2, gbc_scrollPane_2);
+		                        		
+		                        		wednesdayList = new JList<JCheckBox>(checkBoxModelsMap.get("Wednesday"));
+		                        		wednesdayList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		                		        wednesdayList.setCellRenderer(new CheckboxListCellRenderer());		        
+
+		                        		scrollPane_2.setViewportView(wednesdayList);
+		                        		
+		                        		scrollPane_3 = new JScrollPane((Component) null);
+		                        		GridBagConstraints gbc_scrollPane_3 = new GridBagConstraints();
+		                        		gbc_scrollPane_3.insets = new Insets(0, 0, 5, 5);
+		                        		gbc_scrollPane_3.fill = GridBagConstraints.BOTH;
+		                        		gbc_scrollPane_3.gridx = 3;
+		                        		gbc_scrollPane_3.gridy = 2;
+		                        		changeAvailabilityPanel.add(scrollPane_3, gbc_scrollPane_3);
+		                        		
+		                        		thursdayList = new JList<JCheckBox>(checkBoxModelsMap.get("Thursday"));
+		                        		thursdayList.setValueIsAdjusting(true);
+		                        		thursdayList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		                		        thursdayList.setCellRenderer(new CheckboxListCellRenderer());		        
+
+		                        		scrollPane_3.setViewportView(thursdayList);
+		                        		
+		                        		scrollPane_4 = new JScrollPane((Component) null);
+		                        		GridBagConstraints gbc_scrollPane_4 = new GridBagConstraints();
+		                        		gbc_scrollPane_4.insets = new Insets(0, 0, 5, 5);
+		                        		gbc_scrollPane_4.fill = GridBagConstraints.BOTH;
+		                        		gbc_scrollPane_4.gridx = 4;
+		                        		gbc_scrollPane_4.gridy = 2;
+		                        		changeAvailabilityPanel.add(scrollPane_4, gbc_scrollPane_4);
+		                        		
+		                        		fridayList = new JList<JCheckBox>(checkBoxModelsMap.get("Friday"));
+		                        		fridayList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		                		        fridayList.setCellRenderer(new CheckboxListCellRenderer());		        
+
+		                        		scrollPane_4.setViewportView(fridayList);
+		                        		
+		                        		scrollPane_5 = new JScrollPane((Component) null);
+		                        		GridBagConstraints gbc_scrollPane_5 = new GridBagConstraints();
+		                        		gbc_scrollPane_5.insets = new Insets(0, 0, 5, 5);
+		                        		gbc_scrollPane_5.fill = GridBagConstraints.BOTH;
+		                        		gbc_scrollPane_5.gridx = 5;
+		                        		gbc_scrollPane_5.gridy = 2;
+		                        		changeAvailabilityPanel.add(scrollPane_5, gbc_scrollPane_5);
+		                        		
+		                        		saturdayList = new JList<JCheckBox>(checkBoxModelsMap.get("Saturday"));
+		                        		saturdayList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		                		        saturdayList.setCellRenderer(new CheckboxListCellRenderer());		        
+
+		                        		scrollPane_5.setViewportView(saturdayList);
+		                        		
+		                        		scrollPane_6 = new JScrollPane((Component) null);
+		                        		GridBagConstraints gbc_scrollPane_6 = new GridBagConstraints();
+		                        		gbc_scrollPane_6.insets = new Insets(0, 0, 5, 0);
+		                        		gbc_scrollPane_6.fill = GridBagConstraints.BOTH;
+		                        		gbc_scrollPane_6.gridx = 6;
+		                        		gbc_scrollPane_6.gridy = 2;
+		                        		changeAvailabilityPanel.add(scrollPane_6, gbc_scrollPane_6);
+		                        		
+		                        		sundayList = new JList<JCheckBox>(checkBoxModelsMap.get("Sunday"));
+		                        		sundayList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		                		        sundayList.setCellRenderer(new CheckboxListCellRenderer());		        
+
+		                        		scrollPane_6.setViewportView(sundayList);
+		                        		
+		                        		btnNewButton_1 = new JButton("Clear Day");
+		                        		GridBagConstraints gbc_btnNewButton_1 = new GridBagConstraints();
+		                        		gbc_btnNewButton_1.insets = new Insets(0, 0, 5, 5);
+		                        		gbc_btnNewButton_1.gridx = 0;
+		                        		gbc_btnNewButton_1.gridy = 3;
+		                        		changeAvailabilityPanel.add(btnNewButton_1, gbc_btnNewButton_1);
+		                        		
+		                        		btnNewButton_2 = new JButton("Clear Day");
+		                        		GridBagConstraints gbc_btnNewButton_2 = new GridBagConstraints();
+		                        		gbc_btnNewButton_2.insets = new Insets(0, 0, 5, 5);
+		                        		gbc_btnNewButton_2.gridx = 1;
+		                        		gbc_btnNewButton_2.gridy = 3;
+		                        		changeAvailabilityPanel.add(btnNewButton_2, gbc_btnNewButton_2);
+		                        		
+		                        		btnNewButton_3 = new JButton("Clear Day");
+		                        		GridBagConstraints gbc_btnNewButton_3 = new GridBagConstraints();
+		                        		gbc_btnNewButton_3.insets = new Insets(0, 0, 5, 5);
+		                        		gbc_btnNewButton_3.gridx = 2;
+		                        		gbc_btnNewButton_3.gridy = 3;
+		                        		changeAvailabilityPanel.add(btnNewButton_3, gbc_btnNewButton_3);
+		                        		
+		                        		btnNewButton_4 = new JButton("Clear Day");
+		                        		GridBagConstraints gbc_btnNewButton_4 = new GridBagConstraints();
+		                        		gbc_btnNewButton_4.insets = new Insets(0, 0, 5, 5);
+		                        		gbc_btnNewButton_4.gridx = 3;
+		                        		gbc_btnNewButton_4.gridy = 3;
+		                        		changeAvailabilityPanel.add(btnNewButton_4, gbc_btnNewButton_4);
+		                        		
+		                        		btnNewButton_5 = new JButton("Clear Day");
+		                        		GridBagConstraints gbc_btnNewButton_5 = new GridBagConstraints();
+		                        		gbc_btnNewButton_5.insets = new Insets(0, 0, 5, 5);
+		                        		gbc_btnNewButton_5.gridx = 4;
+		                        		gbc_btnNewButton_5.gridy = 3;
+		                        		changeAvailabilityPanel.add(btnNewButton_5, gbc_btnNewButton_5);
+		                        		
+		                        		btnNewButton_6 = new JButton("Clear Day");
+		                        		GridBagConstraints gbc_btnNewButton_6 = new GridBagConstraints();
+		                        		gbc_btnNewButton_6.insets = new Insets(0, 0, 5, 5);
+		                        		gbc_btnNewButton_6.gridx = 5;
+		                        		gbc_btnNewButton_6.gridy = 3;
+		                        		changeAvailabilityPanel.add(btnNewButton_6, gbc_btnNewButton_6);
+		                        		
+		                        		btnNewButton_7 = new JButton("Clear Day");
+		                        		GridBagConstraints gbc_btnNewButton_7 = new GridBagConstraints();
+		                        		gbc_btnNewButton_7.insets = new Insets(0, 0, 5, 0);
+		                        		gbc_btnNewButton_7.gridx = 6;
+		                        		gbc_btnNewButton_7.gridy = 3;
+		                        		changeAvailabilityPanel.add(btnNewButton_7, gbc_btnNewButton_7);
+		                        		
+		                        		btnNewButton = new JButton("Save Availability");
+		                        		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
+		                        		gbc_btnNewButton.insets = new Insets(0, 0, 0, 5);
+		                        		gbc_btnNewButton.gridx = 3;
+		                        		gbc_btnNewButton.gridy = 4;
+		                        		changeAvailabilityPanel.add(btnNewButton, gbc_btnNewButton);
+	
+
 		/*
 		 *  Checks to see if  account is a tutor and if so it generates the Change Availability button so that tutors can change their availabilities 
 		 *  Students wont need that option
 		 */
 		if (student.getTutor()) {
 			changeAvailabilityButton = new JButton("Change Availability");
-			GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
-			gbc_btnNewButton.gridx = 13;
-			gbc_btnNewButton.gridy = 14;
-			schedulePanel.add(changeAvailabilityButton, gbc_btnNewButton);
+			GridBagConstraints gbc_btnNewButton1 = new GridBagConstraints();
+			gbc_btnNewButton1.gridx = 13;
+			gbc_btnNewButton1.gridy = 14;
+			schedulePanel.add(changeAvailabilityButton, gbc_btnNewButton1);
 
 		}
 
@@ -385,7 +710,7 @@ public class ProfileHomeUI extends JFrame {
 						gbl_accountPane.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
 						accountPane.setLayout(gbl_accountPane);
 								
-										JLabel nameLabel = new JLabel("Name: " + student.getName());
+										nameLabel = new JLabel("Name: " + student.getName());
 										nameLabel.setFont(new Font("Arial", Font.BOLD, 15));
 										GridBagConstraints gbc_nameLabel = new GridBagConstraints();
 										gbc_nameLabel.fill = GridBagConstraints.BOTH;
@@ -394,7 +719,7 @@ public class ProfileHomeUI extends JFrame {
 										gbc_nameLabel.gridy = 0;
 										accountPane.add(nameLabel, gbc_nameLabel);
 						
-								JLabel emailLabel = new JLabel("Email: " + student.getEmail());
+								emailLabel = new JLabel("Email: " + student.getEmail());
 								emailLabel.setFont(new Font("Arial", Font.BOLD, 15));
 								GridBagConstraints gbc_emailLabel = new GridBagConstraints();
 								gbc_emailLabel.fill = GridBagConstraints.BOTH;
@@ -456,6 +781,7 @@ public class ProfileHomeUI extends JFrame {
 		
 		passwordField = new JPasswordField();
 		editProfilePane.add(passwordField);
+		
 		
 		separator = new JSeparator();
 		editProfilePane.add(separator);
@@ -617,4 +943,40 @@ public class ProfileHomeUI extends JFrame {
 	        courseLabels.add(courseLabel);
 	    }
 	}
+	
+	class CheckboxListCellRenderer extends JCheckBox implements ListCellRenderer<Object> {
+
+		public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
+				boolean cellHasFocus) {
+			String text = "";
+			boolean state = false;
+			JCheckBox checkBox = null;
+			
+			setComponentOrientation(list.getComponentOrientation());
+			setFont(list.getFont());
+			setBackground(list.getBackground());
+			setForeground(list.getForeground());
+			setEnabled(list.isEnabled());
+			
+			if (value instanceof JCheckBox) {
+				checkBox = (JCheckBox) value;
+				text = checkBox.getText();
+				
+				state = checkBoxModelsMap.get(checkBox.getClientProperty("day")).get(index).isSelected();
+			}
+			setText(value == null ? "" : text);
+			if(isSelected) 
+			{
+				this.setSelected(isSelected);
+				checkBoxModelsMap.get(checkBox.getClientProperty("day")).get(index).setSelected(isSelected);
+
+			}else 
+			{
+				this.setSelected(state);
+			}
+			
+			return this;
+		}
+	}
 }
+
