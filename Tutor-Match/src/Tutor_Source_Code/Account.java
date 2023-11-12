@@ -234,4 +234,13 @@ public class Account implements Comparable<Account> {
 	public void setSchedule(Schedule newSchedule) {
 		this.schedule = newSchedule;
 	}
+	
+	
+	/**
+	 * Returns String of public tutor info that is displayed to students
+	 * @return
+	 */
+	public String toStringTutor() {
+		return String.format("Name: %s Email: %s", this.name, this.email);
+	}
 }

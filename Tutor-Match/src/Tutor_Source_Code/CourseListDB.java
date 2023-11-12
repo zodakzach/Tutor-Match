@@ -123,7 +123,7 @@ public class CourseListDB {
 	 * @return A list of account IDs that have the course in their course list. An
 	 *         empty list is returned if no matches are found.
 	 */
-	private List<String> findAccountsByCourse(String courseName) {
+	public List<String> findAccountsByCourse(String courseName) {
 		List<String> matchingAccountIds = new ArrayList<>();
 
 		for (Map.Entry<String, ArrayList<Course>> entry : courses.entrySet()) 

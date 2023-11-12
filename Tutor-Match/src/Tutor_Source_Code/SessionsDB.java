@@ -35,33 +35,42 @@ public class SessionsDB {
      */
     public SessionsDB(String filePath) {
         this.filePath = filePath;
-        this.sessions = new ArrayList<>();
         this.gson = new GsonBuilder().setPrettyPrinting().create();
+        this.sessions = loadSessions();
     }
 
     /**
-     * Loads sessions from the JSON file into the database.
+     * Load sessions from a JSON file.
+     * @return List of Session objects or null if the file is empty or contains invalid data.
      */
-    public void loadSessions() {
-        try (Reader reader = new FileReader(filePath)) 
-        {
+    private List<Session> loadSessions() {
+        try (Reader reader = new FileReader(filePath)) {
             // Define the type of object to deserialize
-            Type sessionListType = new TypeToken<List<Session>>(){}.getType();
+            Type sessionListType = new TypeToken<List<Session>>() {}.getType();
 
             // Deserialize the JSON data from the file into the 'sessions' collection
             sessions = gson.fromJson(reader, sessionListType);
-        } 
-        catch (IOException e) 
-        {
+
+            // Check if the sessions list is null or empty
+            if (sessions == null || sessions.isEmpty()) {
+                // Handle the case where the file is empty or contains invalid data
+                return new ArrayList<Session>();
+            }
+
+            // Successfully loaded sessions
+            return sessions;
+        } catch (IOException e) {
             // Handle any IOException that might occur during file reading
             e.printStackTrace();
+            return null; // or throw an exception if appropriate
         }
     }
+
 
     /**
      * Saves the sessions to the JSON file.
      */
-    public void saveSessions() {
+    private void saveSessions() {
         try (Writer writer = new FileWriter(filePath)) 
         {
             // Serialize the 'sessions' collection to JSON and write it to the file
@@ -81,6 +90,7 @@ public class SessionsDB {
      */
     public void addSession(Session session) {
         sessions.add(session);
+        saveSessions();
     }
 
     /**

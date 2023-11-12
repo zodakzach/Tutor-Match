@@ -8,10 +8,19 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import com.toedter.calendar.JCalendar;
 
 
 import javax.swing.DefaultListModel;
@@ -29,7 +38,6 @@ import javax.swing.SwingConstants;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 
-
 import Tutor_Source_Code.Schedule.ACCESS;
 
 import javax.swing.JTextField;
@@ -42,6 +50,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import javax.swing.JTable;
 
 
 @SuppressWarnings("serial")
@@ -123,7 +132,7 @@ public class ProfileHomeUI extends JFrame {
 	private JLabel lblNewLabel_6;
 	private JLabel lblNewLabel_7;
 	private JLabel lblNewLabel_8;
-    private JLabel lblNewLabel_9;
+    private JLabel findTutorLabel;
     
 	/*
 	 * LISTS
@@ -168,7 +177,7 @@ public class ProfileHomeUI extends JFrame {
 	
     // Create a HashMap to store the checkboxes for each day
     HashMap<String, DefaultListModel<JCheckBox>> checkBoxModelsMap = new HashMap<>();
-    String[] daysOfWeek = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+    String[] daysOfWeek = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
     
     //schedule tab related.
     private Choice courseListChoice;
@@ -176,9 +185,17 @@ public class ProfileHomeUI extends JFrame {
     private Choice tutorChoice;
     private JButton viewAvailabilityBtn;
     private Choice tutorSessionsChoice;
-    private JButton btnNewButton;
-    private JLabel lblNewLabel_10;
-
+    private JButton scheduleSessionBtn;
+    private JLabel chooseTutorLabel;
+    private JLabel currentSessionLabel;
+    private JLabel pastSessionsLabel;
+    private JButton cancelSessionBtn;
+    private JList currentSessionsList;
+    private JTable pastSessionsTable;
+    
+    // Define a regex pattern for extracting email addresses
+    Pattern emailPattern = Pattern.compile("Email: (\\S+)");
+    private JCalendar calendar;
 
 
 
@@ -350,6 +367,122 @@ public class ProfileHomeUI extends JFrame {
 			}
 		});
 		
+		findTutuorBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				if(chooseTutorLabel == null) {
+					chooseTutorLabel = new JLabel("Choose a Tutor and Date to View Sessions ");
+					chooseTutorLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 22));
+					GridBagConstraints gbc_chooseTutorLabel = new GridBagConstraints();
+					gbc_chooseTutorLabel.insets = new Insets(0, 0, 5, 5);
+					gbc_chooseTutorLabel.gridx = 1;
+					gbc_chooseTutorLabel.gridy = 3;
+					scheduleSessionPanel.add(chooseTutorLabel, gbc_chooseTutorLabel);
+					
+					tutorChoice = new Choice();
+					GridBagConstraints gbc_tutorChoice = new GridBagConstraints();
+					gbc_tutorChoice.insets = new Insets(0, 0, 5, 5);
+					gbc_tutorChoice.gridx = 1;
+					gbc_tutorChoice.gridy = 4;
+					scheduleSessionPanel.add(tutorChoice, gbc_tutorChoice);
+					
+			        calendar = new JCalendar();
+					GridBagConstraints gbc_calendar = new GridBagConstraints();
+					gbc_calendar.insets = new Insets(0, 0, 5, 5);
+					gbc_calendar.gridx = 1;
+					gbc_calendar.gridy = 5;
+					scheduleSessionPanel.add(calendar, gbc_calendar);	
+					
+			        // Set the minimum selectable date to the next day
+			        Calendar tomorrow = Calendar.getInstance();
+			        tomorrow.add(Calendar.DAY_OF_MONTH, 1);
+			        calendar.setMinSelectableDate(tomorrow.getTime());
+			        
+					viewAvailabilityBtn = new JButton("View Tutor Sessions");
+					GridBagConstraints gbc_viewAvailabilityBtn = new GridBagConstraints();
+					gbc_viewAvailabilityBtn.insets = new Insets(0, 0, 5, 5);
+					gbc_viewAvailabilityBtn.gridx = 1;
+					gbc_viewAvailabilityBtn.gridy = 6;
+					scheduleSessionPanel.add(viewAvailabilityBtn, gbc_viewAvailabilityBtn);	
+
+					viewAvailabilityBtn.addActionListener(new ActionListener(){
+						public void actionPerformed(ActionEvent e) {
+							
+							if(tutorSessionsChoice == null) 
+							{	
+								tutorSessionsChoice = new Choice();
+								GridBagConstraints gbc_tutorSessionsChoice = new GridBagConstraints();
+								gbc_tutorSessionsChoice.insets = new Insets(0, 0, 5, 5);
+								gbc_tutorSessionsChoice.gridx = 1;
+								gbc_tutorSessionsChoice.gridy = 7;
+								scheduleSessionPanel.add(tutorSessionsChoice, gbc_tutorSessionsChoice);
+								
+								scheduleSessionBtn = new JButton("Schedule Session");
+								GridBagConstraints gbc_scheduleSessionBtn = new GridBagConstraints();
+								gbc_scheduleSessionBtn.insets = new Insets(0, 0, 0, 5);
+								gbc_scheduleSessionBtn.gridx = 1;
+								gbc_scheduleSessionBtn.gridy = 8;
+								scheduleSessionPanel.add(scheduleSessionBtn, gbc_scheduleSessionBtn);
+								
+								scheduleSessionBtn.addActionListener(new ActionListener() 
+								{
+									public void actionPerformed(ActionEvent e) 
+									{
+										
+								        // Define the date format
+								        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+
+								        try 
+								        {
+								        	
+								        	if (tutorSessionsChoice.getSelectedItem() != "No Available Sessions") 
+								        	{
+									            // Parse the string into a Date object
+									            Date date = dateFormat.parse(tutorSessionsChoice.getSelectedItem());
+									            
+									            // Match the pattern against the input string
+									            Matcher matcher = emailPattern.matcher(tutorChoice.getSelectedItem());
+									            
+									            // Check if the pattern is found
+									            if (matcher.find()) {
+									                // Extract the email address (group 1 of the match)
+									                String email = matcher.group(1);
+									        		Account tutor = account_DB_master.getAccountByEmail(email);
+									        		
+										            sessions_DB_master.addSession(new Session(student.getID(),tutor.getID(), date, 1));
+										            
+												    accountSessions = sessions_DB_master.getSessionsByStudentId(student.getID());
+												    
+													JOptionPane.showMessageDialog(null, "Session Scheduled!");
+
+									            }
+								        	}
+								        } 
+								        catch (ParseException error) 
+								        {
+								            error.printStackTrace();
+								        }
+									}
+								});
+							}
+							
+							tutorSessionsChoice.removeAll();
+							
+							populateSessionsChoice(tutorSessionsChoice);
+							
+							scheduleSessionPanel.revalidate();
+						}
+					});
+				}
+				
+				tutorChoice.removeAll();
+				populateTutorChoice(tutorChoice);
+				
+				scheduleSessionPanel.revalidate();
+				
+			}
+		});
+		
 		if (student.getTutor()) 
 		{
 			clearMonday.addActionListener(new ActionListener() {
@@ -461,6 +594,8 @@ public class ProfileHomeUI extends JFrame {
 						}
 					}
 				    account_DB_master.updateAccountSchedule(student.getID(), schedule);
+					JOptionPane.showMessageDialog(null, "Availability Updated!");
+
 				}
 			});
 		}	
@@ -508,11 +643,47 @@ public class ProfileHomeUI extends JFrame {
 		JPanel schedulePanel = new JPanel();
 		layeredSchedulePane.add(schedulePanel, "panel1");
 		GridBagLayout gbl_schedulePanel = new GridBagLayout();
-		gbl_schedulePanel.columnWidths = new int[]{532, 304, 301};
-		gbl_schedulePanel.rowHeights = new int[]{5,446 ,5};
-		gbl_schedulePanel.columnWeights = new double[]{Double.MIN_VALUE};
-		gbl_schedulePanel.rowWeights = new double[]{Double.MIN_VALUE};
+		gbl_schedulePanel.columnWidths = new int[]{532};
+		gbl_schedulePanel.rowHeights = new int[]{108,187, 0 ,67, 204};
+		gbl_schedulePanel.columnWeights = new double[]{1.0};
+		gbl_schedulePanel.rowWeights = new double[]{Double.MIN_VALUE, 1.0, 0.0, 0.0, 1.0};
 		schedulePanel.setLayout(gbl_schedulePanel);
+		
+		currentSessionLabel = new JLabel("Current Sessions");
+		GridBagConstraints gbc_currentSessionLabel = new GridBagConstraints();
+		gbc_currentSessionLabel.insets = new Insets(0, 0, 5, 0);
+		gbc_currentSessionLabel.gridx = 0;
+		gbc_currentSessionLabel.gridy = 0;
+		schedulePanel.add(currentSessionLabel, gbc_currentSessionLabel);
+		
+		currentSessionsList = new JList();
+		GridBagConstraints gbc_currentSessionsList = new GridBagConstraints();
+		gbc_currentSessionsList.insets = new Insets(0, 0, 5, 0);
+		gbc_currentSessionsList.fill = GridBagConstraints.BOTH;
+		gbc_currentSessionsList.gridx = 0;
+		gbc_currentSessionsList.gridy = 1;
+		schedulePanel.add(currentSessionsList, gbc_currentSessionsList);
+		
+		cancelSessionBtn = new JButton("Cancel Selected Session");
+		GridBagConstraints gbc_cancelSessionBtn = new GridBagConstraints();
+		gbc_cancelSessionBtn.insets = new Insets(0, 0, 5, 0);
+		gbc_cancelSessionBtn.gridx = 0;
+		gbc_cancelSessionBtn.gridy = 2;
+		schedulePanel.add(cancelSessionBtn, gbc_cancelSessionBtn);
+		
+		pastSessionsLabel = new JLabel("Past Sessions");
+		GridBagConstraints gbc_pastSessionsLabel = new GridBagConstraints();
+		gbc_pastSessionsLabel.insets = new Insets(0, 0, 5, 0);
+		gbc_pastSessionsLabel.gridx = 0;
+		gbc_pastSessionsLabel.gridy = 3;
+		schedulePanel.add(pastSessionsLabel, gbc_pastSessionsLabel);
+		
+		pastSessionsTable = new JTable();
+		GridBagConstraints gbc_pastSessionsTable = new GridBagConstraints();
+		gbc_pastSessionsTable.fill = GridBagConstraints.BOTH;
+		gbc_pastSessionsTable.gridx = 0;
+		gbc_pastSessionsTable.gridy = 4;
+		schedulePanel.add(pastSessionsTable, gbc_pastSessionsTable);
 
 
 		JPanel sessionTabPanel = new JPanel();
@@ -531,19 +702,19 @@ public class ProfileHomeUI extends JFrame {
 		layeredSessionPane.add(scheduleSessionPanel, "panel1");
 		GridBagLayout gbl_scheduleSessionPanel = new GridBagLayout();
 		gbl_scheduleSessionPanel.columnWidths = new int[]{748, 389, 743, 0};
-		gbl_scheduleSessionPanel.rowHeights = new int[]{62, 55, 43, 0, 45, 69, 48, 110, 137, 0};
+		gbl_scheduleSessionPanel.rowHeights = new int[]{62, 46, 43, 0, 38, 163, 48, 109, 46, 0};
 		gbl_scheduleSessionPanel.columnWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
 		gbl_scheduleSessionPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		scheduleSessionPanel.setLayout(gbl_scheduleSessionPanel);
 		
-		lblNewLabel_9 = new JLabel("Select a Course and Find a Tutor");
-		lblNewLabel_9.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_9.setFont(new Font("Lucida Grande", Font.PLAIN, 22));
-		GridBagConstraints gbc_lblNewLabel_9 = new GridBagConstraints();
-		gbc_lblNewLabel_9.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewLabel_9.gridx = 1;
-		gbc_lblNewLabel_9.gridy = 0;
-		scheduleSessionPanel.add(lblNewLabel_9, gbc_lblNewLabel_9);
+		findTutorLabel = new JLabel("Select a Course and Find a Tutor");
+		findTutorLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		findTutorLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 22));
+		GridBagConstraints gbc_findTutorLabel = new GridBagConstraints();
+		gbc_findTutorLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_findTutorLabel.gridx = 1;
+		gbc_findTutorLabel.gridy = 0;
+		scheduleSessionPanel.add(findTutorLabel, gbc_findTutorLabel);
 		courseListChoice = new Choice();
 
 		GridBagConstraints gbc_courseListChoice = new GridBagConstraints();
@@ -559,41 +730,8 @@ public class ProfileHomeUI extends JFrame {
 		gbc_findTutuorBtn.gridy = 2;
 		scheduleSessionPanel.add(findTutuorBtn, gbc_findTutuorBtn);
 		
-		lblNewLabel_10 = new JLabel("Choose a Tutor and Date to View Sessions ");
-		lblNewLabel_10.setFont(new Font("Lucida Grande", Font.PLAIN, 22));
-		GridBagConstraints gbc_lblNewLabel_10 = new GridBagConstraints();
-		gbc_lblNewLabel_10.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewLabel_10.gridx = 1;
-		gbc_lblNewLabel_10.gridy = 3;
-		scheduleSessionPanel.add(lblNewLabel_10, gbc_lblNewLabel_10);
-		
-		tutorChoice = new Choice();
-		GridBagConstraints gbc_tutorChoice = new GridBagConstraints();
-		gbc_tutorChoice.insets = new Insets(0, 0, 5, 5);
-		gbc_tutorChoice.gridx = 1;
-		gbc_tutorChoice.gridy = 4;
-		scheduleSessionPanel.add(tutorChoice, gbc_tutorChoice);
-		
-		viewAvailabilityBtn = new JButton("View Tutor Sessions");
-		GridBagConstraints gbc_viewAvailabilityBtn = new GridBagConstraints();
-		gbc_viewAvailabilityBtn.insets = new Insets(0, 0, 5, 5);
-		gbc_viewAvailabilityBtn.gridx = 1;
-		gbc_viewAvailabilityBtn.gridy = 6;
-		scheduleSessionPanel.add(viewAvailabilityBtn, gbc_viewAvailabilityBtn);
-		
-		tutorSessionsChoice = new Choice();
-		GridBagConstraints gbc_tutorSessionsChoice = new GridBagConstraints();
-		gbc_tutorSessionsChoice.insets = new Insets(0, 0, 5, 5);
-		gbc_tutorSessionsChoice.gridx = 1;
-		gbc_tutorSessionsChoice.gridy = 7;
-		scheduleSessionPanel.add(tutorSessionsChoice, gbc_tutorSessionsChoice);
-		
-		btnNewButton = new JButton("Schedule Session");
-		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
-		gbc_btnNewButton.insets = new Insets(0, 0, 0, 5);
-		gbc_btnNewButton.gridx = 1;
-		gbc_btnNewButton.gridy = 8;
-		scheduleSessionPanel.add(btnNewButton, gbc_btnNewButton);
+
+
 		
 		changeAvailabilityPanel = new JPanel();
 		layeredSessionPane.add(changeAvailabilityPanel, "panel2");
@@ -887,6 +1025,138 @@ public class ProfileHomeUI extends JFrame {
 	            c.get(i).add(course.toString());
 	        }
 	    }
+	}
+	
+	private void populateTutorChoice(Choice tutorChoice) {
+		
+		List<String> accounts = course_database_master.findAccountsByCourse(courseListChoice.getSelectedItem());
+		
+		List<Account> tutors = new ArrayList<Account>();
+				
+		for (int i = 0; i < accounts.size(); i++) 
+		{
+			Account account = account_DB_master.getAccountById(accounts.get(i));
+			
+			if (account != null && account.getTutor()) {
+				tutors.add(account);
+			}
+		}
+		
+		if (tutors.size() == 0) {
+			tutorChoice.add("No Tutors For This Course");
+		}
+		
+		for (int i = 0; i < tutors.size(); i++) 
+		{
+			tutorChoice.add(tutors.get(i).toStringTutor());
+		}
+		
+	}
+	
+	private void populateSessionsChoice(Choice sessionChoice) {
+	    // Match the pattern against the input string
+	    Matcher matcher = emailPattern.matcher(tutorChoice.getSelectedItem());
+	    
+	    // Map to store day availability for the selected tutor
+	    Map<Integer, ACCESS> dayAvailability = new HashMap<Integer, ACCESS>();
+	    
+	    // Get the selected date from the JCalendar
+	    Date selectedDate = calendar.getDate();
+	    
+	    // Use Calendar to determine the day of the week
+	    Calendar calendar = Calendar.getInstance();
+	    calendar.setTime(selectedDate);
+	    
+	    // List to store sessions for the selected tutor
+	    List<Session> tutorSessions = new ArrayList<Session>();
+	    
+	    // Check if the pattern is found
+	    if (matcher.find()) {
+	        // Extract the email address (group 1 of the match)
+	        String email = matcher.group(1);
+	        
+	        // Get the tutor's account based on the email
+	        Account tutor = account_DB_master.getAccountByEmail(email);
+	        
+	        // Get sessions for the selected tutor
+	        tutorSessions = sessions_DB_master.getSessionsByTutorId(tutor.getID());
+	        
+	        // Get the weekly availability for the tutor
+	        Schedule weekAvailability = tutor.getSchedule();
+
+	        // Get the day of the week (0-6) from the calendar
+	        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+	        
+	        // Get the day's availability from the tutor's schedule
+	        dayAvailability = weekAvailability.getDay(dayOfWeek);
+	    }
+	    
+	    // Check if dayAvailability is not null
+	    if (dayAvailability != null) {
+	        // List to store free hours for the selected day
+	        List<Date> freeHoursList = new ArrayList<>();
+
+	        // Iterate through the day's availability
+	        for (Map.Entry<Integer, ACCESS> entry : dayAvailability.entrySet()) {
+	            if (entry.getValue() == ACCESS.FREE) {
+	                int hour = entry.getKey();
+	                
+	                // Set the calendar's hour, minute, and second
+	                calendar.set(Calendar.HOUR_OF_DAY, hour);
+	                calendar.set(Calendar.MINUTE, 0);
+	                calendar.set(Calendar.SECOND, 0);
+
+	                // Get the date with the specified hour
+	                Date dateWithHour = calendar.getTime();
+	                freeHoursList.add(dateWithHour);
+	            }
+	        }
+	        
+	        // Check if tutorSessions is not empty
+	        if (tutorSessions.size() > 0) {
+	            // List to store dates that need to be removed
+	            List<Date> datesToRemove = new ArrayList<>();
+
+	            // Iterate through freeHoursList and tutorSessions to find overlapping dates
+	            for (Date date : freeHoursList) {
+	                for (Session session : tutorSessions) {
+	                    if (isSameTime(session.getStartDate(), date)) {
+	                        datesToRemove.add(date);
+	                        break;  // No need to check further sessions for the same date
+	                    }
+	                }
+	            }
+
+	            // Remove the overlapping dates from freeHoursList
+	            freeHoursList.removeAll(datesToRemove);
+	        }
+
+	        if (freeHoursList.size() == 0) 
+	        {
+	            sessionChoice.add("No Available Sessions");
+	        }
+	        else 
+	        {
+		        // Add the remaining free hours to the sessionChoice
+		        for (Date date : freeHoursList) 
+		        {
+		            sessionChoice.add(date.toString());
+		        }
+	        }
+	    }
+	}
+
+	
+	private boolean isSameTime(Date date1, Date date2) {
+	    Calendar cal1 = Calendar.getInstance();
+	    cal1.setTime(date1);
+	    Calendar cal2 = Calendar.getInstance();
+	    cal2.setTime(date2);
+
+	    return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+	            cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH) &&
+	            cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH) &&
+	            cal1.get(Calendar.HOUR) == cal2.get(Calendar.HOUR);
 	}
 	
 	private void initTutorComponents() {
