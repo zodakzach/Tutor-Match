@@ -7,10 +7,12 @@ import java.util.UUID;
  * The `Session` class represents a tutoring session between a student and a tutor.
  */
 public class Session {
+	private UUID sessionId;
     private UUID studentId;
     private UUID tutorId;
     private Date startDate;
     private int sessionLengthHours;
+    private boolean isCompleted;
 
     /**
      * Constructs a new tutoring session with the provided information.
@@ -21,10 +23,12 @@ public class Session {
      * @param sessionLengthHours The duration of the session in hours.
      */
     public Session(UUID studentId, UUID tutorId, Date startDate, int sessionLengthHours) {
+		this.sessionId = UUID.randomUUID();
         this.studentId = studentId;
         this.tutorId = tutorId;
         this.startDate = startDate;
         this.sessionLengthHours = sessionLengthHours;
+        this.isCompleted = false;
     }
 
     /**
@@ -79,6 +83,18 @@ public class Session {
      */
     public void setSessionLengthHours(int sessionLengthHours) {
         this.sessionLengthHours = sessionLengthHours;
+    }
+    
+    public boolean isCompleted() {
+    	return this.isCompleted;
+    }
+    
+    public void setIsCompleted(boolean newState) {
+    	this.isCompleted = newState;
+    }
+    
+    public UUID getSessionId() {
+    	return this.sessionId;
     }
 
     /**

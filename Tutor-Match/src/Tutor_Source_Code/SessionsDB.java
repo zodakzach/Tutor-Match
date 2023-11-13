@@ -138,4 +138,27 @@ public class SessionsDB {
     public List<Session> getAllSessions() {
         return sessions;
     }
+    
+    /**
+     * Marks a session as completed and saves the updated sessions to the JSON file.
+     *
+     * @param session The session to mark as completed.
+     */
+    public void setSessionAsCompleted(Session session) {
+        // Find the session in the list based on some unique identifier (e.g., session ID)
+        for (Session existingSession : sessions) {
+            if (existingSession.getSessionId().equals(session.getSessionId())) {
+                // Mark the session as completed
+                existingSession.setIsCompleted(true);
+
+                // Save the updated sessions to the JSON file
+                saveSessions();
+                return; // Exit the loop once the session is found and updated
+            }
+        }
+
+        // Handle the case where the specified session is not found
+        System.out.println("Session not found or already marked as completed.");
+    }
 }
+

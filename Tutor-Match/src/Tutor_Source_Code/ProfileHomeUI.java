@@ -190,7 +190,7 @@ public class ProfileHomeUI extends JFrame {
     private JLabel currentSessionLabel;
     private JLabel pastSessionsLabel;
     private JButton cancelSessionBtn;
-    private JList currentSessionsList;
+    private JList<Session> currentSessionsList;
     private JTable pastSessionsTable;
     
     // Define a regex pattern for extracting email addresses
@@ -656,13 +656,24 @@ public class ProfileHomeUI extends JFrame {
 		gbc_currentSessionLabel.gridy = 0;
 		schedulePanel.add(currentSessionLabel, gbc_currentSessionLabel);
 		
-		currentSessionsList = new JList();
+        // Create a DefaultListModel and add items
+        DefaultListModel<Session> listModel = new DefaultListModel<>(); 
+		
+		for (Session sessions : accountSessions) {
+			if (!sessions.isCompleted()) {
+		        listModel.addElement(sessions);
+			}
+		}
+		
+		currentSessionsList = new JList<Session>(listModel);
 		GridBagConstraints gbc_currentSessionsList = new GridBagConstraints();
 		gbc_currentSessionsList.insets = new Insets(0, 0, 5, 0);
 		gbc_currentSessionsList.fill = GridBagConstraints.BOTH;
 		gbc_currentSessionsList.gridx = 0;
 		gbc_currentSessionsList.gridy = 1;
 		schedulePanel.add(currentSessionsList, gbc_currentSessionsList);
+		
+
 		
 		cancelSessionBtn = new JButton("Cancel Selected Session");
 		GridBagConstraints gbc_cancelSessionBtn = new GridBagConstraints();
@@ -1119,11 +1130,17 @@ public class ProfileHomeUI extends JFrame {
 
 	            // Iterate through freeHoursList and tutorSessions to find overlapping dates
 	            for (Date date : freeHoursList) {
-	                for (Session session : tutorSessions) {
-	                    if (isSameTime(session.getStartDate(), date)) {
-	                        datesToRemove.add(date);
-	                        break;  // No need to check further sessions for the same date
-	                    }
+	                for (Session session : tutorSessions) 
+	                {
+	                	if (!session.isCompleted()) 
+	                	{
+		                    if (isSameTime(session.getStartDate(), date)) 
+		                    {
+		                        datesToRemove.add(date);
+		                        break;  // No need to check further sessions for the same date
+		                    }
+	                	}
+
 	                }
 	            }
 
