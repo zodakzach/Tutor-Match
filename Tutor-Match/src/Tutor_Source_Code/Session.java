@@ -85,16 +85,31 @@ public class Session {
         this.sessionLengthHours = sessionLengthHours;
     }
     
+    /**
+     * Checks whether the session is marked as completed.
+     *
+     * @return {@code true} if the session is completed, {@code false} otherwise.
+     */
     public boolean isCompleted() {
-    	return this.isCompleted;
+        return this.isCompleted;
     }
-    
+
+    /**
+     * Sets the completion state of the session.
+     *
+     * @param newState The new completion state to set for the session.
+     */
     public void setIsCompleted(boolean newState) {
-    	this.isCompleted = newState;
+        this.isCompleted = newState;
     }
-    
+
+    /**
+     * Gets the unique identifier (UUID) associated with the session.
+     *
+     * @return The UUID of the session.
+     */
     public UUID getSessionId() {
-    	return this.sessionId;
+        return this.sessionId;
     }
 
     /**

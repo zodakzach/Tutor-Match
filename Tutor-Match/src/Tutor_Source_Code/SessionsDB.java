@@ -82,6 +82,29 @@ public class SessionsDB {
             e.printStackTrace();
         }
     }
+    
+    /**
+     * Deletes a session from the database based on the session ID.
+     *
+     * @param sessionId The UUID of the session to delete.
+     */
+    public void deleteSessionById(UUID sessionId) {
+        // Find the session in the list based on the session ID
+        for (Session session : sessions) {
+            if (session.getSessionId().equals(sessionId)) {
+                // Remove the session from the list
+                sessions.remove(session);
+
+                // Save the updated sessions to the JSON file
+                saveSessions();
+                return; // Exit the loop once the session is found and deleted
+            }
+        }
+
+        // Handle the case where the specified session is not found
+        System.out.println("Session not found.");
+    }
+
 
     /**
      * Adds a session to the database.
@@ -125,6 +148,25 @@ public class SessionsDB {
             if (session.getStudentId().equals(studentId)) 
             {
                 result.add(session);
+            }
+        }
+        return result;
+    }
+    
+    /**
+     * Retrieves a session by session ID.
+     *
+     * @param sessionId The UUID of the session.
+     * @return A session associated with the specified session ID.
+     */
+    public Session getSessionById(UUID sessionId) {
+        Session result = null;
+        
+        for (Session session : sessions) 
+        {
+            if (session.getSessionId().equals(sessionId)) 
+            {
+            	result = session;
             }
         }
         return result;
