@@ -13,6 +13,9 @@ public class Session {
     private Date startDate;
     private int sessionLengthHours;
     private boolean isCompleted;
+    private Rating sessionRating;
+
+    
 
     /**
      * Constructs a new tutoring session with the provided information.
@@ -29,6 +32,7 @@ public class Session {
         this.startDate = startDate;
         this.sessionLengthHours = sessionLengthHours;
         this.isCompleted = false;
+        this.sessionRating = Rating.NOT_RATED; // Set default rating as not rated
     }
 
     /**
@@ -125,6 +129,46 @@ public class Session {
                 ", startDate=" + startDate +
                 ", sessionLengthHours=" + sessionLengthHours +
                 '}';
+    }
+    
+    /**
+     * Get the rating for the session.
+     *
+     * @return The rating for the session.
+     */
+    public Rating getSessionRating() {
+        return sessionRating;
+    }
+
+    /**
+     * Set the rating for the session.
+     *
+     * @param sessionRating The rating to set for the session.
+     */
+    public void setSessionRating(Rating sessionRating) {
+        this.sessionRating = sessionRating;
+    }
+}
+
+/**
+ * Enum representing the rating for a session.
+ */
+enum Rating {
+    NOT_RATED(0),
+    ONE_STAR(1),
+    TWO_STARS(2),
+    THREE_STARS(3),
+    FOUR_STARS(4),
+    FIVE_STARS(5);
+
+    private final int value;
+
+    Rating(int value) {
+        this.value = value;
+    }
+
+    public int getValue() {
+        return value;
     }
 }
 

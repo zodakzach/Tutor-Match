@@ -184,12 +184,12 @@ public class SessionsDB {
     /**
      * Marks a session as completed and saves the updated sessions to the JSON file.
      *
-     * @param session The session to mark as completed.
+     * @param sessionID of the session to mark as completed.
      */
-    public void setSessionAsCompleted(Session session) {
+    public void setSessionAsCompleted(UUID sessionId) {
         // Find the session in the list based on some unique identifier (e.g., session ID)
         for (Session existingSession : sessions) {
-            if (existingSession.getSessionId().equals(session.getSessionId())) {
+            if (existingSession.getSessionId().equals(sessionId)) {
                 // Mark the session as completed
                 existingSession.setIsCompleted(true);
 
