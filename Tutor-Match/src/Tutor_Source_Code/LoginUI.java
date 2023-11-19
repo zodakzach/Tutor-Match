@@ -25,6 +25,7 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.MatteBorder;
 
+@SuppressWarnings("serial")
 public class LoginUI extends JFrame 
 {
 	private static AccountDB student_database_master;

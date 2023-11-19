@@ -49,8 +49,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTable;
 
-import Tutor_Source_Code.Schedule.ACCESS;
-
+// Jcalendar Import
 import com.toedter.calendar.JCalendar;
 
 @SuppressWarnings("serial")
@@ -65,7 +64,11 @@ public class ProfileHomeUI extends JFrame {
 	private ArrayList<Course> courseList;
 	private int numOfSessions;
 	private int totalSessionHours;
-
+	private Rating avgTutorRating;
+	private JTable pastSessionsTable;
+	private MyTableModel sessionTabelmodel;
+	private DefaultListModel<String> sessionListModel;
+	
 	/*
 	 * DATABASES
 	 */
@@ -94,7 +97,9 @@ public class ProfileHomeUI extends JFrame {
 	private JButton viewAvailabilityBtn;
 	private JButton scheduleSessionBtn;
 	private JButton findTutuorBtn;
-
+	private JButton cancelSessionBtn;
+	private JButton markCompleteBtn;
+	
 	/*
 	 * PANELS
 	 */
@@ -110,6 +115,7 @@ public class ProfileHomeUI extends JFrame {
 	private JPanel myCoursesPanel;
 	private JPanel accountPane;
 	private JPanel schedulePanel;
+	private JPanel sessionButtonsPanel;
 
 	/*
 	 * LAYEREDPANES
@@ -156,6 +162,7 @@ public class ProfileHomeUI extends JFrame {
 	private JList<JCheckBox> sundayList;
 	private JList<String> currentSessionsList;
 	private List<UUID> sessionIds;
+	private List<Session> completedSessions = new ArrayList<>();
 
 	/*
 	 * TEXTFIELDS
@@ -174,7 +181,6 @@ public class ProfileHomeUI extends JFrame {
 	private JSeparator separator;
 	private CardLayout scheduleCardLayout;
 	private CardLayout sessionCardLayout;
-
 	private JScrollPane scrollPane_1;
 	private JScrollPane scrollPane_2;
 	private JScrollPane scrollPane_3;
@@ -184,7 +190,7 @@ public class ProfileHomeUI extends JFrame {
 	private JScrollPane mondayPane;
 
 	/*
-	 * CHOUCES
+	 * CHOICES
 	 */
 	private Choice courseListChoice;
 	private Choice tutorChoice;
@@ -195,18 +201,12 @@ public class ProfileHomeUI extends JFrame {
 
 	String[] daysOfWeek = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
 
-	private JTable pastSessionsTable;
-	private MyTableModel sessionTabelmodel;
-	private DefaultListModel<String> sessionListModel;
-
 	// Define a regex pattern for extracting email addresses
 	Pattern emailPattern = Pattern.compile("Email: (\\S+)");
 
 	// JCalendar
 	private JCalendar calendar;
-	private JPanel sessionButtonsPanel;
-	private JButton cancelSessionBtn;
-	private JButton markCompleteBtn;
+
 
 // Create the frame.
 	public ProfileHomeUI(Account student_account, CourseListDB course_db) {
@@ -239,7 +239,14 @@ public class ProfileHomeUI extends JFrame {
 			if (session.isCompleted()) {
 				totalSessionHours += session.getSessionLengthHours();
 				numOfSessions++;
+				completedSessions.add(session);
 			}
+		}
+		
+		if (student.getTutor()) 
+		{
+			avgTutorRating = calculateAverageRating(completedSessions);
+
 		}
 
 		// Initialize components
@@ -283,15 +290,21 @@ public class ProfileHomeUI extends JFrame {
 				// Iterate through the 'choices' list
 				for (Choice choice : choices) {
 					// Split the selected item's text based on white space
-					String[] selectedOption = choice.getSelectedItem().split("\\s+", 3);
+					if (choice.getSelectedItem().length() > 0) 
+					{	
+						String[] selectedOption = choice.getSelectedItem().split("\\s+", 3);
 
-					// Create a 'Course' object using the parsed information
-					Course course = new Course(selectedOption[0], Integer.parseInt(selectedOption[1]),
-							selectedOption[2]);
+						// Create a 'Course' object using the parsed information
+						if (selectedOption.length >0) 
+						{
+							Course course = new Course(selectedOption[0], Integer.parseInt(selectedOption[1]),
+									selectedOption[2]);
 
-					// Check if the 'course' object is not null and add it to 'selectedCourses'
-					if (course != null) {
-						selectedCourses.add(course);
+							// Check if the 'course' object is not null and add it to 'selectedCourses'
+							if (course != null) {
+								selectedCourses.add(course);
+							}
+						}
 					}
 				}
 
@@ -306,6 +319,10 @@ public class ProfileHomeUI extends JFrame {
 				courseNames.clear();
 				for (Course courses : courseList) {
 					courseNames.add(courses.toString());
+				}
+				
+				if(courseNames.size() == 0) {
+					courseNames.add("No Courses in Course List");
 				}
 
 				while (courseNames.size() < 6) {
@@ -380,120 +397,7 @@ public class ProfileHomeUI extends JFrame {
 			}
 		});
 
-		findTutuorBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-
-				if (chooseTutorLabel == null) {
-					chooseTutorLabel = new JLabel("Choose a Tutor and Date to View Sessions ");
-					chooseTutorLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 22));
-					GridBagConstraints gbc_chooseTutorLabel = new GridBagConstraints();
-					gbc_chooseTutorLabel.insets = new Insets(0, 0, 5, 5);
-					gbc_chooseTutorLabel.gridx = 1;
-					gbc_chooseTutorLabel.gridy = 3;
-					scheduleSessionPanel.add(chooseTutorLabel, gbc_chooseTutorLabel);
-
-					tutorChoice = new Choice();
-					GridBagConstraints gbc_tutorChoice = new GridBagConstraints();
-					gbc_tutorChoice.insets = new Insets(0, 0, 5, 5);
-					gbc_tutorChoice.gridx = 1;
-					gbc_tutorChoice.gridy = 4;
-					scheduleSessionPanel.add(tutorChoice, gbc_tutorChoice);
-
-					calendar = new JCalendar();
-					GridBagConstraints gbc_calendar = new GridBagConstraints();
-					gbc_calendar.insets = new Insets(0, 0, 5, 5);
-					gbc_calendar.gridx = 1;
-					gbc_calendar.gridy = 5;
-					scheduleSessionPanel.add(calendar, gbc_calendar);
-
-					// Set the minimum selectable date to the next day
-					Calendar tomorrow = Calendar.getInstance();
-					tomorrow.add(Calendar.DAY_OF_MONTH, 1);
-					calendar.setMinSelectableDate(tomorrow.getTime());
-
-					viewAvailabilityBtn = new JButton("View Tutor Sessions");
-					GridBagConstraints gbc_viewAvailabilityBtn = new GridBagConstraints();
-					gbc_viewAvailabilityBtn.insets = new Insets(0, 0, 5, 5);
-					gbc_viewAvailabilityBtn.gridx = 1;
-					gbc_viewAvailabilityBtn.gridy = 6;
-					scheduleSessionPanel.add(viewAvailabilityBtn, gbc_viewAvailabilityBtn);
-
-					viewAvailabilityBtn.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent e) {
-
-							if (tutorSessionsChoice == null) {
-								tutorSessionsChoice = new Choice();
-								GridBagConstraints gbc_tutorSessionsChoice = new GridBagConstraints();
-								gbc_tutorSessionsChoice.insets = new Insets(0, 0, 5, 5);
-								gbc_tutorSessionsChoice.gridx = 1;
-								gbc_tutorSessionsChoice.gridy = 7;
-								scheduleSessionPanel.add(tutorSessionsChoice, gbc_tutorSessionsChoice);
-
-								scheduleSessionBtn = new JButton("Schedule Session");
-								GridBagConstraints gbc_scheduleSessionBtn = new GridBagConstraints();
-								gbc_scheduleSessionBtn.insets = new Insets(0, 0, 0, 5);
-								gbc_scheduleSessionBtn.gridx = 1;
-								gbc_scheduleSessionBtn.gridy = 8;
-								scheduleSessionPanel.add(scheduleSessionBtn, gbc_scheduleSessionBtn);
-
-								scheduleSessionBtn.addActionListener(new ActionListener() {
-									public void actionPerformed(ActionEvent e) {
-
-										// Define the date format
-										SimpleDateFormat dateFormat = new SimpleDateFormat(
-												"EEE MMM dd HH:mm:ss zzz yyyy");
-
-										try {
-
-											if (tutorSessionsChoice.getSelectedItem() != "No Available Sessions") {
-												// Parse the string into a Date object
-												Date date = dateFormat.parse(tutorSessionsChoice.getSelectedItem());
-
-												// Match the pattern against the input string
-												Matcher matcher = emailPattern.matcher(tutorChoice.getSelectedItem());
-
-												// Check if the pattern is found
-												if (matcher.find()) {
-													// Extract the email address (group 1 of the match)
-													String email = matcher.group(1);
-													Account tutor = account_DB_master.getAccountByEmail(email);
-
-													sessions_DB_master.addSession(
-															new Session(student.getID(), tutor.getID(), date, 1));
-
-													accountSessions = sessions_DB_master
-															.getSessionsByStudentId(student.getID());
-
-													JOptionPane.showMessageDialog(null, "Session Scheduled!");
-
-												}
-												UpdateCurrentSessionList();
-											}
-										} catch (ParseException error) {
-											error.printStackTrace();
-										}
-									}
-								});
-							}
-
-							tutorSessionsChoice.removeAll();
-
-							populateSessionsChoice(tutorSessionsChoice);
-
-							scheduleSessionPanel.revalidate();
-							schedulePanel.revalidate();
-						}
-					});
-				}
-
-				tutorChoice.removeAll();
-				populateTutorChoice(tutorChoice);
-
-				scheduleSessionPanel.revalidate();
-
-			}
-		});
-
+		
 		cancelSessionBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -628,19 +532,179 @@ public class ProfileHomeUI extends JFrame {
 					int selectedSession = currentSessionsList.getSelectedIndex();
 
 					if (selectedSession >= 0) {
-						sessions_DB_master.setSessionAsCompleted(sessionIds.get(selectedSession));
 
 						Session session = sessions_DB_master.getSessionById(sessionIds.get(selectedSession));
 
 						Account tutor = account_DB_master.getAccountById(session.getTutorId().toString());
+		
+			            // Prompt the user to rate the session
+						int ratingInt = 0; // Initialize the rating variable outside the loop
 
-						Object[] newRow = { tutor.getName(), session.getStartDate(), session.getSessionLengthHours() };
+						while (true) {
+						    String ratingInput = JOptionPane.showInputDialog(null, "Please rate the session (1-5):");
+
+						    try {
+						        // Attempt to parse the input as an integer
+						        ratingInt = Integer.parseInt(ratingInput);
+
+						        // Check if the input is within the valid range (1-5)
+						        if (ratingInt >= 1 && ratingInt <= 5) {
+						            break; // Exit the loop if the input is valid
+						        } else {
+						            JOptionPane.showMessageDialog(null, "Invalid input. Please enter a number between 1 and 5.");
+						        }
+						    } catch (NumberFormatException ex) {
+						        // Handle the case where the input is not a valid integer
+						        JOptionPane.showMessageDialog(null, "Invalid input. Please enter a number between 1 and 5.");
+						    }
+						}
+		                Rating rating = Rating.fromValue(ratingInt);
+
+		                // Update session Rating
+		                session.setSessionRating(rating);
+		                
+		                // Update sessionsDB
+						sessions_DB_master.setSessionAsCompleted(sessionIds.get(selectedSession));
+						
+						// Update Completed Sessions Table
+						Object[] newRow = { tutor.getName(), session.getStartDate(), session.getSessionLengthHours(), session.getSessionRating() };
 						sessionTabelmodel.addRow(newRow);
-
-					}
+						
+						// Add to completed sessions
+						completedSessions.add(session);
+			        }
+					// Update Current Sessions List
 					UpdateCurrentSessionList();
 				}
 			});
+			
+			findTutuorBtn.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+
+					if (chooseTutorLabel == null) {
+						chooseTutorLabel = new JLabel("Choose a Tutor and Date to View Sessions ");
+						chooseTutorLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 22));
+						GridBagConstraints gbc_chooseTutorLabel = new GridBagConstraints();
+						gbc_chooseTutorLabel.insets = new Insets(0, 0, 5, 5);
+						gbc_chooseTutorLabel.gridx = 1;
+						gbc_chooseTutorLabel.gridy = 3;
+						scheduleSessionPanel.add(chooseTutorLabel, gbc_chooseTutorLabel);
+
+						tutorChoice = new Choice();
+						GridBagConstraints gbc_tutorChoice = new GridBagConstraints();
+						gbc_tutorChoice.insets = new Insets(0, 0, 5, 5);
+						gbc_tutorChoice.gridx = 1;
+						gbc_tutorChoice.gridy = 4;
+						scheduleSessionPanel.add(tutorChoice, gbc_tutorChoice);
+
+						calendar = new JCalendar();
+						GridBagConstraints gbc_calendar = new GridBagConstraints();
+						gbc_calendar.insets = new Insets(0, 0, 5, 5);
+						gbc_calendar.gridx = 1;
+						gbc_calendar.gridy = 5;
+						scheduleSessionPanel.add(calendar, gbc_calendar);
+
+						// Set the minimum selectable date to the next day
+						Calendar tomorrow = Calendar.getInstance();
+						tomorrow.add(Calendar.DAY_OF_MONTH, 1);
+						calendar.setMinSelectableDate(tomorrow.getTime());
+
+						viewAvailabilityBtn = new JButton("View Tutor Sessions");
+						GridBagConstraints gbc_viewAvailabilityBtn = new GridBagConstraints();
+						gbc_viewAvailabilityBtn.insets = new Insets(0, 0, 5, 5);
+						gbc_viewAvailabilityBtn.gridx = 1;
+						gbc_viewAvailabilityBtn.gridy = 6;
+						scheduleSessionPanel.add(viewAvailabilityBtn, gbc_viewAvailabilityBtn);
+						
+						tutorChoice.removeAll();
+						populateTutorChoice(tutorChoice);
+
+						scheduleSessionPanel.revalidate();
+
+						viewAvailabilityBtn.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+
+								if (tutorSessionsChoice == null) {
+									tutorSessionsChoice = new Choice();
+									GridBagConstraints gbc_tutorSessionsChoice = new GridBagConstraints();
+									gbc_tutorSessionsChoice.insets = new Insets(0, 0, 5, 5);
+									gbc_tutorSessionsChoice.gridx = 1;
+									gbc_tutorSessionsChoice.gridy = 7;
+									scheduleSessionPanel.add(tutorSessionsChoice, gbc_tutorSessionsChoice);
+
+									scheduleSessionBtn = new JButton("Schedule Session");
+									GridBagConstraints gbc_scheduleSessionBtn = new GridBagConstraints();
+									gbc_scheduleSessionBtn.insets = new Insets(0, 0, 0, 5);
+									gbc_scheduleSessionBtn.gridx = 1;
+									gbc_scheduleSessionBtn.gridy = 8;
+									scheduleSessionPanel.add(scheduleSessionBtn, gbc_scheduleSessionBtn);	
+
+									tutorSessionsChoice.removeAll();
+
+									populateSessionsChoice(tutorSessionsChoice);
+
+									scheduleSessionPanel.revalidate();
+									schedulePanel.revalidate();
+
+									scheduleSessionBtn.addActionListener(new ActionListener() {
+										public void actionPerformed(ActionEvent e) 
+										{
+											try {
+												if (tutorSessionsChoice.getSelectedItem() != "No Available Sessions") {
+													// Define the date format
+													SimpleDateFormat dateFormat = new SimpleDateFormat(
+															"EEE MMM dd HH:mm:ss zzz yyyy");
+													// Parse the string into a Date object
+													Date date = dateFormat.parse(tutorSessionsChoice.getSelectedItem());
+
+													// Match the pattern against the input string
+													Matcher matcher = emailPattern.matcher(tutorChoice.getSelectedItem());
+
+													// Check if the pattern is found
+													if (matcher.find()) {
+														// Extract the email address (group 1 of the match)
+														String email = matcher.group(1);
+														Account tutor = account_DB_master.getAccountByEmail(email);
+														
+														// Split the selected item's text based on white space
+														String[] selectedOption = courseListChoice.getSelectedItem().split("\\s+", 3);
+														
+														if (selectedOption.length == 3) {
+															// Create a 'Course' object using the parsed information
+															Course course = new Course(selectedOption[0], Integer.parseInt(selectedOption[1]),
+																	selectedOption[2]);
+
+															sessions_DB_master.addSession(
+																	new Session(student.getID(), tutor.getID(), date, 1, course));
+
+															accountSessions = sessions_DB_master
+																	.getSessionsByStudentId(student.getID());
+
+															JOptionPane.showMessageDialog(null, "Session Scheduled!");
+														}
+
+													}
+													UpdateCurrentSessionList();
+													
+													tutorSessionsChoice.removeAll();
+
+													populateSessionsChoice(tutorSessionsChoice);
+
+													scheduleSessionPanel.revalidate();
+													schedulePanel.revalidate();
+												}
+											} catch (ParseException error) {
+												error.printStackTrace();
+											}
+										}
+									});
+								}
+							}
+						});
+					}
+				}
+			});
+
 		}
 
 	}
@@ -694,12 +758,13 @@ public class ProfileHomeUI extends JFrame {
 		layeredSchedulePane.add(schedulePanel, "panel1");
 		GridBagLayout gbl_schedulePanel = new GridBagLayout();
 		gbl_schedulePanel.columnWidths = new int[] { 532 };
-		gbl_schedulePanel.rowHeights = new int[] { 108, 187, 0, 67, 204 };
+		gbl_schedulePanel.rowHeights = new int[] { 82, 187, 0, 67, 204 };
 		gbl_schedulePanel.columnWeights = new double[] { 1.0 };
 		gbl_schedulePanel.rowWeights = new double[] { Double.MIN_VALUE, 1.0, 1.0, 0.0, 1.0 };
 		schedulePanel.setLayout(gbl_schedulePanel);
 
 		currentSessionLabel = new JLabel("Current Sessions");
+		currentSessionLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 26));
 		GridBagConstraints gbc_currentSessionLabel = new GridBagConstraints();
 		gbc_currentSessionLabel.insets = new Insets(0, 0, 5, 0);
 		gbc_currentSessionLabel.gridx = 0;
@@ -736,13 +801,14 @@ public class ProfileHomeUI extends JFrame {
 		sessionButtonsPanel.add(cancelSessionBtn);
 
 		pastSessionsLabel = new JLabel("Completed Sessions");
+		pastSessionsLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 26));
 		GridBagConstraints gbc_pastSessionsLabel = new GridBagConstraints();
 		gbc_pastSessionsLabel.insets = new Insets(0, 0, 5, 0);
 		gbc_pastSessionsLabel.gridx = 0;
 		gbc_pastSessionsLabel.gridy = 3;
 		schedulePanel.add(pastSessionsLabel, gbc_pastSessionsLabel);
 
-		sessionTabelmodel = new MyTableModel(new String[] { "Name", "Session Time", "Session Length" });
+		sessionTabelmodel = new MyTableModel(new String[] { "Name", "Session Time", "Session Duration", "Session Rating" });
 
 		pastSessionsTable = new JTable(sessionTabelmodel);
 		GridBagConstraints gbc_pastSessionsTable = new GridBagConstraints();
@@ -816,7 +882,7 @@ public class ProfileHomeUI extends JFrame {
 		 */
 		if (student.getTutor()) {
 			// If the account is a tutor, set column labels for the session table
-			Object[] columnLabels = { "Student", "Time", "Length" };
+			Object[] columnLabels = { "Student", "Time", "Duration", "Rating" };
 			sessionTabelmodel.addRow(columnLabels);
 
 			// Loop through each session in the account's sessions
@@ -827,14 +893,14 @@ public class ProfileHomeUI extends JFrame {
 				// Check if the session is completed
 				if (session.isCompleted()) {
 					// If completed, add a row to the session table with student details
-					Object[] newRow = { student.getName(), session.getStartDate(), session.getSessionLengthHours() };
+					Object[] newRow = { student.getName(), session.getStartDate(), session.getSessionLengthHours(), session.getSessionRating() };
 					sessionTabelmodel.addRow(newRow);
 				} else {
 					// If not completed, add the session ID to the list and update the session list
 					// model
 					sessionIds.add(session.getSessionId());
 					sessionListModel.addElement("Student: " + student.getName() + " Time: " + session.getStartDate()
-							+ " Length: " + session.getSessionLengthHours());
+							+ " Duration: " + session.getSessionLengthHours());
 				}
 			}
 
@@ -844,7 +910,7 @@ public class ProfileHomeUI extends JFrame {
 
 		} else {
 			// If the account is not a tutor, set column labels for the session table
-			Object[] columnLabels = { "Tutor", "Time", "Length" };
+			Object[] columnLabels = { "Tutor", "Time", "Duration", "Rating" };
 			sessionTabelmodel.addRow(columnLabels);
 
 			// Loop through each session in the account's sessions
@@ -855,14 +921,14 @@ public class ProfileHomeUI extends JFrame {
 				// Check if the session is completed
 				if (session.isCompleted()) {
 					// If completed, add a row to the session table with tutor details
-					Object[] newRow = { tutor.getName(), session.getStartDate(), session.getSessionLengthHours() };
+					Object[] newRow = { tutor.getName(), session.getStartDate(), session.getSessionLengthHours(), session.getSessionRating() };
 					sessionTabelmodel.addRow(newRow);
 				} else {
 					// If not completed, add the session ID to the list and update the session list
 					// model
 					sessionIds.add(session.getSessionId());
 					sessionListModel.addElement("Tutor: " + tutor.getName() + " Time: " + session.getStartDate()
-							+ " Length: " + session.getSessionLengthHours());
+							+ " Duration: " + session.getSessionLengthHours());
 				}
 			}
 
@@ -891,9 +957,9 @@ public class ProfileHomeUI extends JFrame {
 		accountLayeredPane.add(accountPane, "name_46145700595681");
 		GridBagLayout gbl_accountPane = new GridBagLayout();
 		gbl_accountPane.columnWidths = new int[] { 532 };
-		gbl_accountPane.rowHeights = new int[] { 163, 130, 126, 130, 150 };
+		gbl_accountPane.rowHeights = new int[] { 163, 130, 126, 130, 96, 150 };
 		gbl_accountPane.columnWeights = new double[] { Double.MIN_VALUE };
-		gbl_accountPane.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_accountPane.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		accountPane.setLayout(gbl_accountPane);
 
 		nameLabel = new JLabel("Name: " + student.getName());
@@ -915,6 +981,19 @@ public class ProfileHomeUI extends JFrame {
 		gbc_numberOfSessionsLabel.gridx = 0;
 		gbc_numberOfSessionsLabel.gridy = 2;
 		accountPane.add(numberOfSessionsLabel, gbc_numberOfSessionsLabel);
+		
+		if (student.getTutor()) {
+			JLabel avgRating = new JLabel("Rating: " + avgTutorRating);
+			avgRating.setHorizontalAlignment(SwingConstants.CENTER);
+			avgRating.setFont(new Font("Arial", Font.BOLD, 15));
+			GridBagConstraints gbc_avgRating = new GridBagConstraints();
+			gbc_avgRating.fill = GridBagConstraints.BOTH;
+			gbc_avgRating.insets = new Insets(0, 0, 5, 0);
+			gbc_avgRating.gridx = 0;
+			gbc_avgRating.gridy = 4;
+			accountPane.add(avgRating, gbc_avgRating);
+			
+		}
 
 		editProfileButton = new JButton("Edit Profile");
 		editProfileButton.setBackground(new Color(0, 170, 254));
@@ -922,7 +1001,7 @@ public class ProfileHomeUI extends JFrame {
 		gbc_editProfileButton.insets = new Insets(0, 0, 5, 0);
 		gbc_editProfileButton.fill = GridBagConstraints.BOTH;
 		gbc_editProfileButton.gridx = 0;
-		gbc_editProfileButton.gridy = 4;
+		gbc_editProfileButton.gridy = 5;
 		accountPane.add(editProfileButton, gbc_editProfileButton);
 
 		JLabel hoursLoggedLabel = new JLabel("Total Hours: " + totalSessionHours);
@@ -991,11 +1070,20 @@ public class ProfileHomeUI extends JFrame {
 		 * all to strings and adds them to the courseNames list This courseNames list is
 		 * used to generate the courseLabels
 		 */
-		if (courseList != null) {
-			for (Course courses : courseList) {
-				courseNames.add(courses.toString());
+		if(courseList != null) 
+		{
+			if (courseList.size() > 0) {
+				for (Course courses : courseList) {
+					courseNames.add(courses.toString());
+				}
 			}
-		} else {
+			else 
+			{
+				courseNames.add("No Courses in Course List");
+			}
+		}
+		else 
+		{
 			courseNames.add("No Courses in Course List");
 		}
 
@@ -1131,6 +1219,7 @@ public class ProfileHomeUI extends JFrame {
 		// Iterate through the ArrayList of Choice components
 		for (int i = 0; i < c.size(); i++) {
 
+			c.get(i).add("");
 			// Iterate through the retrieved list of courses
 			for (Course course : courses) {
 				// Add the string representation of each course to the current Choice component
@@ -1338,7 +1427,7 @@ public class ProfileHomeUI extends JFrame {
             }
         }
 
-        return Rating.values()[closestValue - 1];
+        return Rating.values()[closestValue];
     }
 
 	public class MyTableModel extends AbstractTableModel {

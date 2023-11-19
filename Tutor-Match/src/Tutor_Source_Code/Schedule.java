@@ -5,24 +5,6 @@ import java.util.Map;
 
 public class Schedule 
 {
-	public enum ACCESS 
-	{
-		FREE(1), // AVAILABLE
-		BUSY(0), // NORMALLY AVAILABLE, BUT EVENT SCHEDULED
-		NOT(-1); // UNAVAILABLE; BLACKED OUT DATE
-		
-		private final int AVAILABILITY;
-
-		ACCESS(int avail) 
-		{
-	        this.AVAILABILITY = avail;
-	    }
-
-	    public int getNum() 
-	    {
-	        return AVAILABILITY;
-	    }
-	}
 	
 	Map<Integer, ACCESS> hours; // dictionary holding a boolean value for each hour of a day
 	Map<Integer, Map<Integer, ACCESS>> schedule; // dictionary holding the dictionary of days
@@ -124,4 +106,23 @@ public class Schedule
 		
 		return true;
 	}
+}
+
+enum ACCESS 
+{
+	FREE(1), // AVAILABLE
+	BUSY(0), // NORMALLY AVAILABLE, BUT EVENT SCHEDULED
+	NOT(-1); // UNAVAILABLE; BLACKED OUT DATE
+	
+	private final int AVAILABILITY;
+
+	ACCESS(int avail) 
+	{
+        this.AVAILABILITY = avail;
+    }
+
+    public int getNum() 
+    {
+        return AVAILABILITY;
+    }
 }

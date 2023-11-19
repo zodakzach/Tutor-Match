@@ -145,11 +145,11 @@ public class AccountDatabase
 /**
  * Adds student to the database
  */
-	public boolean addStudent(String email, String password, String name)
+	public boolean addStudent(String email, String password, String name, boolean isTutor)
 	{
 		if(this.searchEmail(email) == null)
 		{
-			database.add(new Account(email, password, name));
+			database.add(new Account(email, password, name, isTutor));
 			
 			this.save();
 			
@@ -204,9 +204,7 @@ public class AccountDatabase
 			if(database.get(x).getEmail().equals(email))
 			{
 				database.remove(x);
-				
-				Account.updateCount(-1);
-				
+								
 				this.save();
 		
 				return true;
